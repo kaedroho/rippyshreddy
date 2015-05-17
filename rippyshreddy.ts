@@ -53,7 +53,6 @@ class LocalPlayer implements Player {
     }
 }
 
-
 class Camera {
     private posX: number;
     private posY: number;
@@ -175,7 +174,6 @@ class Stickman {
 
     tick(dt: number) {
         // Ducking
-
         const ducking = this.player.input.duck;
         const duckDistanceLeft = Math.abs((ducking ? 1 : 0) - this.duckTransition);
         const duckSpeed = duckDistanceLeft * dt * 10;
@@ -196,7 +194,6 @@ class Stickman {
         }
 
         // Position
-
         this.velX = this.player.input.move / (1 + this.duckTransition) * 450;
         this.velY += dt * 2000;
         this.posX += this.velX * dt;
@@ -528,7 +525,7 @@ function startGame(canvas: HTMLCanvasElement): void {
         // Update camera
         camera.update(0.03);
 
-        // Inpu
+        // Input
         let move = 0;
         if (moveRight) move++;
         if (moveLeft) move--;
