@@ -114,19 +114,20 @@ class Camera {
         const posX = this.posX + this.velX * at;
         const posY = this.posY + this.velY * at;
         const posZ = this.posZ + this.velZ * at;
-        const scale = 1 / (posZ / 1024);
+        const canvas = context.canvas;
+        const scale = 1 / (posZ /  Math.max(canvas.width, canvas.height * (16/9.0)));
 
-        context.translate(512, 512);
+        context.translate(canvas.width/2, canvas.height/2);
         context.scale(scale, scale);
         context.translate(-posX, -posY);
     }
 
-    screenToScene(x: number, y: number) {
-        const scale = this.posZ / 1024;
+    screenToScene(canvas: HTMLCanvasElement, x: number, y: number) {
+        const scale = this.posZ / ( Math.max(canvas.width, canvas.height * (16/9.0)));
 
         return [
-            (x - 512) * scale + this.posX,
-            (y - 512) * scale + this.posY,
+            (x - canvas.width/2) * scale + this.posX,
+            (y - canvas.height/2) * scale + this.posY,
        ];
     }
 }
@@ -292,7 +293,7 @@ class Stickman {
         context.lineWidth = 10;
         context.lineJoin = 'round';
         context.lineCap = 'round';
- 
+
         context.beginPath();
         context.moveTo(leftFootPositionX, leftFootPositionY);
         context.lineTo(leftKneePositionX, leftKneePositionY);
@@ -500,7 +501,7 @@ function startGame(canvas: HTMLCanvasElement): void {
         const at = (time - lastTick) / 1000;
         lastFrame = time;
 
-        context.clearRect(0, 0, 1024, 768);
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
         const stickman = scene.getStickman(human);
         if (stickman) {
@@ -519,8 +520,22 @@ function startGame(canvas: HTMLCanvasElement): void {
     }
     requestAnimationFrame(frame);
 
+    function updateCanvasSize() {
+        if (canvas.width !== canvas.offsetWidth) {
+            canvas.width = canvas.offsetWidth;
+        }
+        if (canvas.height !== canvas.offsetHeight) {
+            canvas.height = canvas.offsetHeight;
+        }
+    }
+
+    updateCanvasSize();
+
     function tick() {
         lastTick = Date.now();
+
+        // Update canvas size
+        updateCanvasSize();
 
         // Update camera
         camera.update(0.03);
@@ -534,7 +549,7 @@ function startGame(canvas: HTMLCanvasElement): void {
             move: move,
             jump: jump,
             duck: duck,
-            lookAt: <Vector2>camera.screenToScene(mouseX, mouseY),
+            lookAt: <Vector2>camera.screenToScene(canvas, mouseX, mouseY),
         });
 
         // Update scene
