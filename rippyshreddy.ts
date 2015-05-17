@@ -1,4 +1,5 @@
 type Context2D = CanvasRenderingContext2D;
+type Vector2 = [number, number];
 
 interface Input {
     move: number;
@@ -119,6 +120,35 @@ class Camera {
     }
 }
 
+function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number): Vector2 {
+    // Work out middle
+    const midX = (p1[0] + p2[0]) / 2;
+    const midY = (p1[1] + p2[1]) / 2;
+
+    // Work out distance to middle
+    const midDistX = midX - p1[0];
+    const midDistY = midY - p1[1];
+
+    // Work out angle
+    const angle = Math.atan2(midDistY, midDistX);
+
+    // Work out dist squared
+    const distSquared = midDistX * midDistX + midDistY * midDistY;
+
+    // Work out height of joint
+    const jointHeight = Math.sqrt(Math.abs(length * length - distSquared));
+
+    // Work out angle
+    const jointAngle = angle + Math.atan2(jointHeight, Math.sqrt(distSquared)) * invert;
+
+    // Work out position
+    const dest = <Vector2>[0, 0];
+    dest[0] = p1[0] + length * Math.cos(jointAngle);
+    dest[1] = p1[1] + length * Math.sin(jointAngle);
+
+    return dest;
+};
+
 class Stickman {
     private posX: number;
     private posY: number;
@@ -126,12 +156,17 @@ class Stickman {
     private velY: number;
     public player: Player;
 
+    private movePhase: number;
+    private duckTransition: number;
+
     constructor(player: Player) {
         this.posX = 0;
         this.posY = 0;
         this.velX = 0;
         this.velY = 0;
         this.player = player;
+        this.movePhase = 0;
+        this.duckTransition = 0;
     }
 
     tick(dt: number) {
@@ -150,10 +185,121 @@ class Stickman {
                 this.velY -= 500;
             }
         }
+
+        if (this.player.input.move) {
+            this.movePhase += dt * 15;
+        } else {
+            this.movePhase = 0;
+        }
+
+        if (this.player.input.duck) {
+            this.duckTransition += dt
+        }
+
+
+        const ducking = this.player.input.duck;
+        const duckDistanceLeft = Math.abs((ducking ? 1 : 0) - this.duckTransition);
+        const duckSpeed = duckDistanceLeft * dt * 10;
+
+        // Update duck transition
+        if (ducking) {
+            this.duckTransition += duckSpeed;
+        } else {
+            this.duckTransition -= duckSpeed;
+        }
+
+        if (this.duckTransition < 0) {
+            // Ducking
+            this.duckTransition = 0;
+        } else if (this.duckTransition > 1) {
+            // Standing
+            this.duckTransition = 1;
+        }
     }
 
     draw(context: Context2D, at: number) {
-        context.fillRect(this.posX + this.velX * at, this.posY + this.velY * at, 10, 10);
+        const duckTransition = this.duckTransition;
+        const neckHeight = 100 - 25 * duckTransition;
+        const hipHeight = 75 - 25 * duckTransition;
+        const legHeight = 40;
+
+        const hipPositionX = 0;
+        const hipPositionY = -hipHeight;
+
+        const neckPositionX = hipPositionX;
+        const neckPositionY = hipPositionY - neckHeight;
+
+        // TODO: Add recoil to neck position
+
+        const middlePositionX = (hipPositionX + neckPositionX) / 2;
+        const middlePositionY = (hipPositionY + neckPositionY) / 2;
+
+        let leftFootPositionX = -20;
+        let leftFootPositionY = 0;
+        let rightFootPositionX = 20;
+        let rightFootPositionY = 0;
+
+        const movingLeft = this.player.input.move < 0;
+        const movingRight = this.player.input.move > 0;
+        const moving = movingLeft || movingRight
+        const running = 1;
+
+        if (this.player.input.move != 0) {
+            const movePhase = this.movePhase + at * 15;
+
+            leftFootPositionX = Math.sin(-this.movePhase) * hipPositionY / 2;
+            rightFootPositionX = Math.sin(-this.movePhase + Math.PI) * hipPositionY / 2;
+
+            leftFootPositionY = Math.cos(-this.movePhase) * hipPositionY / 4 + (hipPositionY / 8) * running;
+            rightFootPositionY = Math.cos(-this.movePhase + Math.PI) * hipPositionY / 4 + (hipPositionY / 8) * running;
+        }
+
+        // Knees
+
+        // Work out knee inversion
+        const leftKneeInversion = moving ? -1: 1;
+        const rightKneeInversion = -1;
+
+        // Work out knee positions
+        let [leftKneePositionX, leftKneePositionY] = calculateJoint(
+            [hipPositionX, hipPositionY],
+            [leftFootPositionX, leftFootPositionY],
+            legHeight, leftKneeInversion);
+        let [rightKneePositionX, rightKneePositionY] = calculateJoint(
+            [hipPositionX, hipPositionY],
+            [rightFootPositionX, rightFootPositionY],
+            legHeight, rightKneeInversion);
+
+        if (movingLeft) {
+            // Reverse leg direction
+            leftFootPositionX = -leftFootPositionX;
+            rightFootPositionX = -rightFootPositionX;
+            leftKneePositionX = -leftKneePositionX;
+            rightKneePositionX = -rightKneePositionX;
+        }
+
+        context.save();
+        context.translate(this.posX + this.velX * at, this.posY + this.velY * at);
+
+        context.lineWidth = 10;
+        context.lineJoin = 'round';
+        context.lineCap = 'round';
+ 
+        context.beginPath();
+        context.moveTo(leftFootPositionX, leftFootPositionY);
+        context.lineTo(leftKneePositionX, leftKneePositionY);
+        context.lineTo(hipPositionX, hipPositionY);
+
+        context.moveTo(rightFootPositionX, rightFootPositionY);
+        context.lineTo(rightKneePositionX, rightKneePositionY);
+        context.lineTo(hipPositionX, hipPositionY);
+
+        context.moveTo(neckPositionX, neckPositionY);
+        context.lineTo(hipPositionX, hipPositionY);
+
+        context.stroke();
+
+        context.restore();
     }
 
     getPosition(): [number, number] {
@@ -164,7 +310,7 @@ class Stickman {
 class PlayerState {
     public kills: number;
     public deaths: number;
-    public respawnTimer: number;
+    public respawnTimer: number
     public stickman: Stickman;
 
     isInGame() {
