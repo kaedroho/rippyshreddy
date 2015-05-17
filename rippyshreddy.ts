@@ -475,8 +475,8 @@ function constructFortMap() {
     return map;
 }
 
-function startGame(element: HTMLCanvasElement): void {
-    const context = <Context2D>element.getContext('2d');
+function startGame(canvas: HTMLCanvasElement): void {
+    const context = <Context2D>canvas.getContext('2d');
 
     const map = constructFortMap();
     const scene = new Scene(map);
@@ -580,8 +580,8 @@ function startGame(element: HTMLCanvasElement): void {
         return false;
     };
 
-    element.onmousemove = function(event) {
-        const rect = element.getBoundingClientRect();
+    canvas.onmousemove = function(event) {
+        const rect = canvas.getBoundingClientRect();
         mouseX = event.clientX - rect.left;
         mouseY = event.clientY - rect.top;
 
