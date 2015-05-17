@@ -129,7 +129,7 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
     const midDistX = midX - p1[0];
     const midDistY = midY - p1[1];
 
-    // Work out position    
+    // Work out positio
     const angle = Math.atan2(midDistY, midDistX);
     const distSquared = midDistX * midDistX + midDistY * midDistY;
     const jointHeight = Math.sqrt(Math.abs(length * length - distSquared));
@@ -190,6 +190,7 @@ class Stickman {
         this.posX += this.velX * dt;
         this.posY += this.velY * dt;
 
+        let onFloor = false
         if (this.posY > 300) {
             this.posY = 300;
             if (this.velY > 0) {
@@ -198,15 +199,20 @@ class Stickman {
 
             if (this.player.input.jump) {
                 this.velY -= 1400;
+            } else {
+                onFloor = true;
             }
         }
-        
-        // Move phase
 
-        if (this.player.input.move) {
-            this.movePhase += dt * 15;
+        // Move phase
+        if (onFloor) {
+            let legSpeed = this.velX * dt / 30;
+            if (this.player.input.move < 0) {
+                legSpeed *= -1;
+            }
+            this.movePhase += legSpeed;
         } else {
-            this.movePhase = 0;
+            this.movePhase = Math.PI / 8;
         }
     }
 
