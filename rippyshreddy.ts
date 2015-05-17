@@ -5,6 +5,7 @@ interface Input {
     move: number;
     jump: boolean;
     duck: boolean;
+    lookAt: Vector2;
 }
 
 interface Player {
@@ -28,6 +29,7 @@ class LocalPlayer implements Player {
             move: 0,
             jump: false,
             duck: false,
+            lookAt: [0, 0],
         }
     }
 
@@ -40,6 +42,9 @@ class LocalPlayer implements Player {
         }
         if ('duck' in input) {
             this.input.duck = input.duck;
+        }
+        if ('lookAt' in input) {
+            this.input.lookAt = input.lookAt;
         }
     }
 
@@ -110,13 +115,20 @@ class Camera {
         const posX = this.posX + this.velX * at;
         const posY = this.posY + this.velY * at;
         const posZ = this.posZ + this.velZ * at;
+        const scale = 1 / (posZ / 1024);
 
         context.translate(512, 512);
-
-        const scale = 1 / (posZ / 1024);
         context.scale(scale, scale);
-
         context.translate(-posX, -posY);
+    }
+
+    screenToScene(x: number, y: number) {
+        const scale = this.posZ / 1024;
+
+        return [
+            (x - 512) * scale + this.posX,
+            (y - 512) * scale + this.posY,
+       ];
     }
 }
 
@@ -477,6 +489,14 @@ function startGame(element: HTMLCanvasElement): void {
     let lastFrame = Date.now();
     let lastTick = Date.now();
 
+    let moveLeft = false;
+    let moveRight = false;
+    let jump = false;
+    let duck = false;
+
+    let mouseX = null;
+    let mouseY = null;
+
     function frame() {
         const time = Date.now();
         const dt = (time - lastFrame) / 1000;
@@ -505,18 +525,10 @@ function startGame(element: HTMLCanvasElement): void {
     function tick() {
         lastTick = Date.now();
 
+        // Update camera
         camera.update(0.03);
-        scene.tick(0.03);
-    }
 
-    setInterval(tick, 30);
-
-    let moveLeft = false;
-    let moveRight = false;
-    let jump = false;
-    let duck = false;
-
-    function refreshInput() {
+        // Inpu
         let move = 0;
         if (moveRight) move++;
         if (moveLeft) move--;
@@ -525,8 +537,14 @@ function startGame(element: HTMLCanvasElement): void {
             move: move,
             jump: jump,
             duck: duck,
+            lookAt: <Vector2>camera.screenToScene(mouseX, mouseY),
         });
+
+        // Update scene
+        scene.tick(0.03);
     }
+
+    setInterval(tick, 30);
 
     document.body.onkeydown = function(event) {
         if (event.keyCode === 37) {
@@ -541,7 +559,6 @@ function startGame(element: HTMLCanvasElement): void {
             return;
         }
 
-        refreshInput();
         event.preventDefault();
         return false;
     };
@@ -559,8 +576,16 @@ function startGame(element: HTMLCanvasElement): void {
             return;
         }
 
-        refreshInput();
         event.preventDefault();
         return false;
     };
+
+    element.onmousemove = function(event) {
+        const rect = element.getBoundingClientRect();
+        mouseX = event.clientX - rect.left;
+        mouseY = event.clientY - rect.top;
+
+        event.preventDefault();
+        return false;
+    }
 }
