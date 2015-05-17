@@ -170,32 +170,7 @@ class Stickman {
     }
 
     tick(dt: number) {
-        this.velX = this.player.input.move * 300;
-        this.velY += dt * 1000;
-        this.posX += this.velX * dt;
-        this.posY += this.velY * dt;
-
-        if (this.posY > 300) {
-            this.posY = 300;
-            if (this.velY > 0) {
-                this.velY = 0;
-            }
-
-            if (this.player.input.jump) {
-                this.velY -= 500;
-            }
-        }
-
-        if (this.player.input.move) {
-            this.movePhase += dt * 15;
-        } else {
-            this.movePhase = 0;
-        }
-
-        if (this.player.input.duck) {
-            this.duckTransition += dt
-        }
-
+        // Ducking
 
         const ducking = this.player.input.duck;
         const duckDistanceLeft = Math.abs((ducking ? 1 : 0) - this.duckTransition);
@@ -214,6 +189,32 @@ class Stickman {
         } else if (this.duckTransition > 1) {
             // Standing
             this.duckTransition = 1;
+        }
+
+        // Position
+
+        this.velX = this.player.input.move / (1 + this.duckTransition) * 450;
+        this.velY += dt * 2000;
+        this.posX += this.velX * dt;
+        this.posY += this.velY * dt;
+
+        if (this.posY > 300) {
+            this.posY = 300;
+            if (this.velY > 0) {
+                this.velY = 0;
+            }
+
+            if (this.player.input.jump) {
+                this.velY -= 1400;
+            }
+        }
+        
+        // Move phase
+
+        if (this.player.input.move) {
+            this.movePhase += dt * 15;
+        } else {
+            this.movePhase = 0;
         }
     }
 
@@ -489,7 +490,7 @@ function startGame(element: HTMLCanvasElement): void {
         const stickman = scene.getStickman(human);
         if (stickman) {
             const position = stickman.getPosition();
-            camera.moveTo(position[0], position[1], 2000);
+            camera.moveTo(position[0], position[1], 2400);
         }
 
         context.save();
