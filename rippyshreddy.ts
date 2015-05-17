@@ -129,24 +129,16 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
     const midDistX = midX - p1[0];
     const midDistY = midY - p1[1];
 
-    // Work out angle
+    // Work out position    
     const angle = Math.atan2(midDistY, midDistX);
-
-    // Work out dist squared
     const distSquared = midDistX * midDistX + midDistY * midDistY;
-
-    // Work out height of joint
     const jointHeight = Math.sqrt(Math.abs(length * length - distSquared));
-
-    // Work out angle
     const jointAngle = angle + Math.atan2(jointHeight, Math.sqrt(distSquared)) * invert;
+    const pos = <Vector2>[0, 0];
+    pos[0] = p1[0] + length * Math.cos(jointAngle);
+    pos[1] = p1[1] + length * Math.sin(jointAngle);
 
-    // Work out position
-    const dest = <Vector2>[0, 0];
-    dest[0] = p1[0] + length * Math.cos(jointAngle);
-    dest[1] = p1[1] + length * Math.sin(jointAngle);
-
-    return dest;
+    return pos;
 };
 
 class Stickman {
