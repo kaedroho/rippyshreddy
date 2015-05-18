@@ -266,8 +266,8 @@ class Stickman {
 
     draw(context: Context2D, at: number) {
         const duckTransition = this.duckTransition;
-        const neckHeight = 100 - 25 * duckTransition;
-        const hipHeight = 75 - 25 * duckTransition;
+        const neckHeight = 100 - 35 * duckTransition;
+        const hipHeight = 75 - 30 * duckTransition;
         const legHeight = 40;
 
         const hipPositionX = 0;
