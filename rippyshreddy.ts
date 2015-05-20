@@ -540,11 +540,11 @@ class Scene {
     }
 
     draw(context: Context2D, at: number) {
-        this.map.draw(context);
-
         this.getStickmen().forEach(function(stickman) {
             stickman.draw(context, at);
         })
+
+        this.map.draw(context);
     }
 
     tick(dt: number) {
