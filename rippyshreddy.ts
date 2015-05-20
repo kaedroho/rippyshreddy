@@ -16,6 +16,15 @@ interface Player {
 class AIPlayer implements Player {
     input: Input;
 
+    constructor() {
+        this.input = {
+            move: 0,
+            jump: false,
+            duck: false,
+            lookAt: [0, 0],
+        }
+    }
+
     getDisplayName() {
         return "John";
     }
