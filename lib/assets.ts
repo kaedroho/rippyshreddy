@@ -11,12 +11,12 @@ module Assets {
             assets.push(this);
         }
 
-        load(callback: () => void) { }
+        load(baseURL: string, callback: () => void) { }
     }
 
     export class ImageAsset extends Asset {
         private src: string;
-        private image: HTMLImageElement;
+        public image: HTMLImageElement;
 
         constructor(src: string) {
             super();
@@ -25,13 +25,14 @@ module Assets {
             this.image = null;
         }
 
-        load(callback: () => void) {
+        load(baseURL: string, callback: () => void) {
             this.image = new Image();
+            this.image.src = baseURL + this.src;
             this.image.onload = callback;
         }
     }
 
-    export function loadAssets(updateProgress: (totalAssets: number, assetsLoaded: number) => void) {
+    export function loadAssets(baseURL: string, updateProgress: (totalAssets: number, assetsLoaded: number) => void) {
         if (assetLock) {
             throw "Assets already loaded.";
         }
@@ -43,7 +44,7 @@ module Assets {
 
         for (var i = 0; i < assets.length; i++) {
             var asset = assets[i];
-            asset.load(function() {
+            asset.load(baseURL, function() {
                 assetsLoaded++;
                 updateProgress(assets.length, assetsLoaded);
             });
