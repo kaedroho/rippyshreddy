@@ -5,7 +5,7 @@
   "main": "rippyshreddy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc rippyshreddy.ts --sourcemap",
+    "build": "tsc rippyshreddy.ts --sourcemap --out rippyshreddy.js",
     "watch": "watch 'npm run build'"
   },
   "author": "",
