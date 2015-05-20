@@ -674,15 +674,32 @@ function startGame(canvas: HTMLCanvasElement): void {
 
     setInterval(tick, 30);
 
+    let upKey = false;
+    let leftKey = false;
+    let downKey = false;
+    let rightKey = false;
+    let wKey = false;
+    let aKey = false;
+    let sKey = false;
+    let dKey = false;
+
     document.body.onkeydown = function(event) {
         if (event.keyCode === 37) {
-            moveLeft = true;
+            leftKey = moveLeft = true;
         } else if (event.keyCode === 39) {
-            moveRight = true;
-        } else if (event.keyCode == 38) {
-            jump = true;
-        } else if (event.keyCode == 40) {
-            duck = true;
+            rightKey = moveRight = true;
+        } else if (event.keyCode === 38) {
+            upKey = jump = true;
+        } else if (event.keyCode === 40) {
+            downKey = duck = true;
+        } else if (event.keyCode === 87) {
+            wKey = jump = true;
+        } else if (event.keyCode === 65) {
+            aKey = moveLeft = true;
+        } else if (event.keyCode === 83) {
+            sKey = duck = true;
+        } else if (event.keyCode === 68) {
+            dKey = moveRight = true;
         } else {
             return;
         }
@@ -693,13 +710,29 @@ function startGame(canvas: HTMLCanvasElement): void {
 
     document.body.onkeyup = function(event) {
         if (event.keyCode === 37) {
-            moveLeft = false;
+            leftKey = false;
+            moveLeft = aKey;
         } else if (event.keyCode === 39) {
-            moveRight = false;
-        } else if (event.keyCode == 38) {
-            jump = false;
-        } else if (event.keyCode == 40) {
-            duck = false;
+            rightKey = false;
+            moveRight = dKey;
+        } else if (event.keyCode === 38) {
+            upKey = false;
+            jump = wKey;
+        } else if (event.keyCode === 40) {
+            downKey = false;
+            duck = sKey;
+        } else if (event.keyCode === 87) {
+            wKey = false;
+            jump = upKey;
+        } else if (event.keyCode === 65) {
+            aKey = false;
+            moveLeft = leftKey;
+        } else if (event.keyCode === 83) {
+            sKey = false;
+            duck = downKey;
+        } else if (event.keyCode === 68) {
+            dKey = false;
+            moveRight = rightKey;
         } else {
             return;
         }
