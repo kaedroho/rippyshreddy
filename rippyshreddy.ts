@@ -150,7 +150,7 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
     const midDistX = midX - p1[0];
     const midDistY = midY - p1[1];
 
-    // Work out positio
+    // Work out position
     const angle = Math.atan2(midDistY, midDistX);
     const distSquared = midDistX * midDistX + midDistY * midDistY;
     const jointHeight = Math.sqrt(Math.abs(length * length - distSquared));
