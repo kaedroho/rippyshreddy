@@ -1,70 +1,10 @@
 /// <reference path="lib/assets.ts" />
 /// <reference path="camera.ts" />
 /// <reference path="map.ts" />
+/// <reference path="player.ts" />
 
 type Context2D = CanvasRenderingContext2D;
 type Vector2 = [number, number];
-
-interface Input {
-    move: number;
-    jump: boolean;
-    duck: boolean;
-    lookAt: Vector2;
-}
-
-interface Player {
-    input: Input;
-    getDisplayName(): string;
-}
-
-class AIPlayer implements Player {
-    input: Input;
-
-    constructor() {
-        this.input = {
-            move: 0,
-            jump: false,
-            duck: false,
-            lookAt: [0, 0],
-        }
-    }
-
-    getDisplayName() {
-        return "John";
-    }
-}
-
-class LocalPlayer implements Player {
-    input: Input;
-
-    constructor() {
-        this.input = {
-            move: 0,
-            jump: false,
-            duck: false,
-            lookAt: [0, 0],
-        }
-    }
-
-    setInput(input: Input) {
-        if ('move' in input) {
-            this.input.move = input.move;
-        }
-        if ('jump' in input) {
-            this.input.jump = input.jump;
-        }
-        if ('duck' in input) {
-            this.input.duck = input.duck;
-        }
-        if ('lookAt' in input) {
-            this.input.lookAt = input.lookAt;
-        }
-    }
-
-    getDisplayName() {
-        return "Bob";
-    }
-}
 
 function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number): Vector2 {
     // Work out middle
