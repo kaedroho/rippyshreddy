@@ -85,7 +85,7 @@ class Scene {
                 playerState.respawnTimer -= dt;
 
                 if (playerState.respawnTimer <= 0) {
-                    playerState.stickman = new Stickman(player);
+                    playerState.stickman = new Stickman(this, player);
                     playerState.respawnTimer = null;
                 }
             }

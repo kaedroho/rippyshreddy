@@ -1,4 +1,5 @@
 /// <reference path="player.ts" />
+/// <reference path="scene.ts" />
 
 function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number): Vector2 {
     // Work out middle
@@ -26,6 +27,7 @@ class Stickman {
     private posY: number;
     private velX: number;
     private velY: number;
+    private scene: Scene;
     public player: Player;
 
     private movePhase: number;
@@ -33,11 +35,12 @@ class Stickman {
     private pitch: number;
     private facingLeft: boolean;
 
-    constructor(player: Player) {
+    constructor(scene: Scene, player: Player) {
         this.posX = 0;
         this.posY = 0;
         this.velX = 0;
         this.velY = 0;
+        this.scene = scene;
         this.player = player;
         this.movePhase = 0;
         this.duckTransition = 0;
