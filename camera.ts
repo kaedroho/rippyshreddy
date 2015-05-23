@@ -1,26 +1,20 @@
 class Camera {
-    private posX: number;
-    private posY: number;
-    private posZ: number;
+    private posX: number = 0;
+    private posY: number = 0;
+    private posZ: number = 0;
 
-    private velX: number;
-    private velY: number;
-    private velZ: number;
+    private velX: number = 0;
+    private velY: number = 0;
+    private velZ: number = 0;
 
-    private targetX: number;
-    private targetY: number;
-    private targetZ: number;
+    private targetX: number = null;
+    private targetY: number = null;
+    private targetZ: number = null;
 
     constructor(x: number, y: number, z: number) {
         this.posX = x;
         this.posY = y;
         this.posZ = z;
-        this.velX = 0;
-        this.velY = 0;
-        this.velZ = 0;
-        this.targetX = null;
-        this.targetY = null;
-        this.targetZ = null;
     }
 
     setPosition(x: number, y: number, z: number) {

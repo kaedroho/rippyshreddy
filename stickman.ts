@@ -23,29 +23,21 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
 };
 
 class Stickman {
-    private posX: number;
-    private posY: number;
-    private velX: number;
-    private velY: number;
+    private posX: number = 0;
+    private posY: number = 0;
+    private velX: number = 0;
+    private velY: number = 0;
     private scene: Scene;
     public player: Player;
 
-    private movePhase: number;
-    private duckTransition: number;
-    private pitch: number;
-    private facingLeft: boolean;
+    private movePhase: number = 0;
+    private duckTransition: number = 0;
+    private pitch: number = 0;
+    private facingLeft: boolean = false;
 
     constructor(scene: Scene, player: Player) {
-        this.posX = 0;
-        this.posY = 0;
-        this.velX = 0;
-        this.velY = 0;
         this.scene = scene;
         this.player = player;
-        this.movePhase = 0;
-        this.duckTransition = 0;
-        this.pitch = 0;
-        this.facingLeft = false;
     }
 
     tick(dt: number) {

@@ -11,16 +11,12 @@ interface Player {
 }
 
 class AIPlayer implements Player {
-    input: Input;
-
-    constructor() {
-        this.input = {
-            move: 0,
-            jump: false,
-            duck: false,
-            lookAt: [0, 0],
-        }
-    }
+    input: Input = {
+        move: 0,
+        jump: false,
+        duck: false,
+        lookAt: [0, 0],
+    };
 
     getDisplayName() {
         return "John";
@@ -28,16 +24,12 @@ class AIPlayer implements Player {
 }
 
 class LocalPlayer implements Player {
-    input: Input;
-
-    constructor() {
-        this.input = {
-            move: 0,
-            jump: false,
-            duck: false,
-            lookAt: [0, 0],
-        }
-    }
+    input: Input = {
+        move: 0,
+        jump: false,
+        duck: false,
+        lookAt: [0, 0],
+    };
 
     setInput(input: Input) {
         if ('move' in input) {

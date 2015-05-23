@@ -17,10 +17,11 @@ class PlayerState {
 }
 
 class Scene {
-    private players: [Player, PlayerState][];
+    private map: Map;
+    private players: [Player, PlayerState][] = [];
 
-    constructor(private map: Map) {
-        this.players = [];
+    constructor(map: Map) {
+        this.map = map;
     }
 
     private getStickmen(): Stickman[] {

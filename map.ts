@@ -1,11 +1,15 @@
 class Map {
+    private sizeX: number;
+    private sizeY: number;
     private tiles: Uint8Array;
     private static tileImages: Assets.ImageAsset[] = [
         null, // 0 - Air
         new Assets.ImageAsset('tiles/brick.png'), // 1 - Brick
     ]
 
-    constructor(private sizeX: number, private sizeY: number) {
+    constructor(sizeX: number, sizeY: number) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
         this.tiles = new Uint8Array(sizeX * sizeY);
     }
 
