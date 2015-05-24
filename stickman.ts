@@ -102,7 +102,6 @@ class Stickman {
 
             if (lastRow === Math.floor(lastRow)) {
                 lastRow -= 0.01;
-
             }
             lastRow = Math.floor(lastRow);
 
