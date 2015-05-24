@@ -23,8 +23,8 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
 };
 
 class Stickman {
-    private posX: number = 0;
-    private posY: number = 0;
+    private posX: number = 10;
+    private posY: number = -100;
     private velX: number = 0;
     private velY: number = 0;
     private scene: Scene;
@@ -61,24 +61,103 @@ class Stickman {
             this.duckTransition = 1;
         }
 
-        // Position
+        // Velocity
         this.velX = this.player.input.move / (1 + this.duckTransition) * 450;
         this.velY += dt * 2000;
-        this.posX += this.velX * dt;
-        this.posY += this.velY * dt;
 
-        let onFloor = false
-        if (this.posY > 300) {
-            this.posY = 300;
-            if (this.velY > 0) {
+        const neckHeight = 100 - 25 * this.duckTransition;
+        const hipHeight = 75 - 25 * this.duckTransition;
+        const height = neckHeight + hipHeight + 60;
+
+        // X position
+        const oldPosX = this.posX;
+        this.posX += this.velX * dt;
+
+        if (this.posX !== oldPosX) {
+            const movingRight = this.posX > oldPosX;
+            let collided = false;
+
+            let firstRow = (this.posY - height) / 64;
+            let lastRow = this.posY / 64;
+
+            const column = movingRight ?  Math.floor((this.posX + 25) / 64) :  Math.floor((this.posX - 25) / 64);
+
+            if (firstRow === Math.floor(firstRow)) {
+                firstRow += 0.01;
+
+            }
+            firstRow = Math.floor(firstRow);
+
+            if (lastRow === Math.floor(lastRow)) {
+                lastRow -= 0.01;
+
+            }
+            lastRow = Math.floor(lastRow);
+
+            for (var row = firstRow; row < lastRow + 1; row++) {
+                if (this.scene.map.getTile(column, row) > 0) {
+                    collided = true;
+                    break;
+                }
+            }
+
+            if (collided) {
+                this.posX = column * 64;
+                if (movingRight) {
+                    this.posX -= 25.001;
+                } else {
+                    this.posX += 64;
+                    this.posX += 25.001;
+                }
+                this.velX = 0;
+            }
+        }
+
+        // Y position
+        const oldPosY = this.posY;
+        this.posY += this.velY * dt;
+        let onFloor = false;
+
+        if (this.posY !== oldPosY) {
+            const movingDown = this.posY > oldPosY;
+            let collided = false;
+            let firstColumn = (this.posX - 25) / 64;
+            let lastColumn = (this.posX + 25) / 64;
+            const row = movingDown ? Math.floor(this.posY / 64) : Math.floor((this.posY - height) / 64);
+
+            if (firstColumn === Math.floor(firstColumn)) {
+                firstColumn += 0.01;
+            }
+            firstColumn = Math.floor(firstColumn);
+
+            if (lastColumn === Math.floor(lastColumn)) {
+                lastColumn -= 0.01;
+            }
+            lastColumn = Math.floor(lastColumn);
+
+            for (var column = firstColumn; column < lastColumn + 1; column++) {
+                if (this.scene.map.getTile(column, row) > 0) {
+                    collided = true;
+                    break;
+                }
+            }
+
+            if (collided) {
+                onFloor = movingDown;
+                this.posY = row * 64;
+                if (movingDown) {
+                    this.posY -= 0.001;
+                } else {
+                    this.posY += 64;
+                    this.posY += height + 0.001;
+                }
                 this.velY = 0;
             }
+        }
 
-            if (this.player.input.jump) {
-                this.velY -= 1400;
-            } else {
-                onFloor = true;
-            }
+        if (onFloor && this.player.input.jump) {
+            this.velY -= 1400;
+            onFloor = false;
         }
 
         // Targeting

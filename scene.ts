@@ -17,7 +17,7 @@ class PlayerState {
 }
 
 class Scene {
-    private map: Map;
+    public map: Map;
     private players: [Player, PlayerState][] = [];
 
     constructor(map: Map) {
@@ -78,6 +78,8 @@ class Scene {
     }
 
     tick(dt: number) {
+        const scene = this;
+
         this.players.forEach(function(p) {
             const player = p[0];
             const playerState = p[1];
@@ -86,7 +88,7 @@ class Scene {
                 playerState.respawnTimer -= dt;
 
                 if (playerState.respawnTimer <= 0) {
-                    playerState.stickman = new Stickman(this, player);
+                    playerState.stickman = new Stickman(scene, player);
                     playerState.respawnTimer = null;
                 }
             }
