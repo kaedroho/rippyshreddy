@@ -82,10 +82,6 @@ class Stickman {
 
             const column = movingRight ?  Math.floor((this.posX + 25) / 64) :  Math.floor((this.posX - 25) / 64);
 
-            if (firstRow === Math.floor(firstRow)) {
-                firstRow += 0.01;
-
-            }
             firstRow = Math.floor(firstRow);
 
             if (lastRow === Math.floor(lastRow)) {
@@ -125,9 +121,6 @@ class Stickman {
             let lastColumn = (this.posX + 25) / 64;
             const row = movingDown ? Math.floor(this.posY / 64) : Math.floor((this.posY - height) / 64);
 
-            if (firstColumn === Math.floor(firstColumn)) {
-                firstColumn += 0.01;
-            }
             firstColumn = Math.floor(firstColumn);
 
             if (lastColumn === Math.floor(lastColumn)) {
