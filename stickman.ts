@@ -65,6 +65,22 @@ class Stickman {
         this.velX = this.player.input.move / (1 + this.duckTransition) * 450;
         this.velY += dt * 2000;
 
+        // Limit velocity to 2000 units/second
+        if (Math.abs(this.velX) > 2000) {
+            if (this.velX > 0) {
+                this.velX = 2000;
+            } else {
+                this.velX = -2000;
+            }
+        }
+        if (Math.abs(this.velY) > 2000) {
+            if (this.velY > 0) {
+                this.velY = 2000;
+            } else {
+                this.velY = -2000;
+            }
+        }
+
         const neckHeight = 100 - 25 * this.duckTransition;
         const hipHeight = 75 - 25 * this.duckTransition;
         const height = neckHeight + hipHeight + 60;
