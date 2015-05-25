@@ -12,10 +12,10 @@ class BaseGun extends BaseWeapon {
     private recoil: number = 0;
 
     tick(dt: number, isAttacking: boolean) {
-        this.recoil -= dt * 10;
+        this.recoil -= dt * 200;
         if (this.recoil < 0) {
             if (isAttacking) {
-                this.recoil = 1;
+                this.recoil = 20;
             } else {
                 this.recoil = 0;
             }
@@ -29,15 +29,15 @@ class BaseGun extends BaseWeapon {
             context.scale(-1, 1);
         }
         context.rotate(pitch);
-        context.translate(-this.recoil * 20, 0);
+        context.translate(-this.recoil, 0);
         context.drawImage(this.image.image, this.imageOffset[0], this.imageOffset[1]);
         context.restore();
     }
 
     getHandPositions(): [Vector2, Vector2] {
         return [
-            [this.leftHandPosition[0] - this.recoil * 20, this.leftHandPosition[1]],
-            [this.rightHandPosition[0] - this.recoil * 20, this.rightHandPosition[1]],
+            [this.leftHandPosition[0] - this.recoil, this.leftHandPosition[1]],
+            [this.rightHandPosition[0] - this.recoil, this.rightHandPosition[1]],
         ];
     }
 }
