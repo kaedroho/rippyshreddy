@@ -51,6 +51,7 @@ function startGame(canvas: HTMLCanvasElement): void {
     let moveRight = false;
     let jump = false;
     let duck = false;
+    let attack = false;
 
     let mouseX = null;
     let mouseY = null;
@@ -110,6 +111,7 @@ function startGame(canvas: HTMLCanvasElement): void {
             jump: jump,
             duck: duck,
             lookAt: <Vector2>camera.screenToScene(canvas, mouseX, mouseY),
+            attack: attack,
         });
 
         // Update scene
@@ -192,7 +194,25 @@ function startGame(canvas: HTMLCanvasElement): void {
 
         event.preventDefault();
         return false;
-    }
+    };
+
+    canvas.onmousedown = function(event) {
+        if (event.button === 0) {
+            attack = true;
+        }
+
+        event.preventDefault();
+        return false;
+    };
+
+    canvas.onmouseup = function(event) {
+        if (event.button === 0) {
+            attack = false;
+        }
+
+        event.preventDefault();
+        return false;
+    };
 }
 
 function RippyShreddyMain(canvas: HTMLCanvasElement) {

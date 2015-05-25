@@ -3,6 +3,7 @@ interface Input {
     jump: boolean;
     duck: boolean;
     lookAt: Vector2;
+    attack: boolean;
 }
 
 interface Player {
@@ -16,6 +17,7 @@ class AIPlayer implements Player {
         jump: false,
         duck: false,
         lookAt: [0, 0],
+        attack: false,
     };
 
     getDisplayName() {
@@ -29,6 +31,7 @@ class LocalPlayer implements Player {
         jump: false,
         duck: false,
         lookAt: [0, 0],
+        attack: false,
     };
 
     setInput(input: Input) {
@@ -43,6 +46,9 @@ class LocalPlayer implements Player {
         }
         if ('lookAt' in input) {
             this.input.lookAt = input.lookAt;
+        }
+        if ('attack' in input) {
+            this.input.attack = input.attack;
         }
     }
 

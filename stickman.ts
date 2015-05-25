@@ -41,6 +41,7 @@ class Stickman {
     constructor(scene: Scene, player: Player) {
         this.scene = scene;
         this.player = player;
+        this.weapon = new MachineGun();
     }
 
     tick(dt: number) {
@@ -205,6 +206,11 @@ class Stickman {
             }
         }
 
+        // Update weapon
+        if (this.weapon) {
+            this.weapon.tick(dt, this.player.input.attack);
+        }
+
         // Move phase
         if (onFloor) {
             let legSpeed = this.velX * dt / 30;
@@ -284,6 +290,12 @@ class Stickman {
         let leftHandPosition = <Vector2>[30, 40];
         let rightHandPosition = <Vector2>[30, 40];
 
+        if (this.weapon) {
+            const handPositions = this.weapon.getHandPositions();
+            leftHandPosition = handPositions[0];
+            rightHandPosition = handPositions[1];
+        }
+
         // Elbows
         let leftElbowPosition = calculateJoint(
             [0, 0],
@@ -334,6 +346,11 @@ class Stickman {
 
         context.save();
         context.translate(this.posX + this.velX * at, this.posY + this.velY * at);
+
+        // Draw weapon
+        if (this.weapon) {
+            this.weapon.draw(context, [neckPositionX, neckPositionY], this.facingLeft, this.pitch);
+        }
 
         context.lineWidth = 10;
         context.lineJoin = 'round';
