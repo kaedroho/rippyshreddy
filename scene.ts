@@ -28,10 +28,9 @@ class Scene {
     private getStickmen(): Stickman[] {
         const stickmen: Stickman[] = [];
 
-        for (let i = 0; i < this.players.length; i++) {
-            const player = this.players[i];
-            if (player[1].stickman) {
-                stickmen.push(player[1].stickman);
+        for (const [player, playerState] of this.players) {
+            if (playerState.stickman) {
+                stickmen.push(playerState.stickman);
             }
         }
 
@@ -43,9 +42,9 @@ class Scene {
     }
 
     getPlayerState(player: Player): PlayerState {
-        for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i][0] === player) {
-                return this.players[i][1];
+        for (const p of this.players) {
+            if (p[0] === player) {
+                return p[1];
             }
         }
     }
@@ -71,32 +70,27 @@ class Scene {
     }
 
     draw(context: Context2D, at: number) {
-        this.getStickmen().forEach(function(stickman) {
+        for (const stickman of this.getStickmen()) {
             stickman.draw(context, at);
-        })
+        }
 
         this.map.draw(context);
     }
 
     tick(dt: number) {
-        const scene = this;
-
-        this.players.forEach(function(p) {
-            const player = p[0];
-            const playerState = p[1];
-
+        for (const [player, playerState] of this.players) {
             if (!playerState.isInGame() && playerState.respawnTimer != null) {
                 playerState.respawnTimer -= dt;
 
                 if (playerState.respawnTimer <= 0) {
-                    playerState.stickman = new Stickman(scene, player);
+                    playerState.stickman = new Stickman(this, player);
                     playerState.respawnTimer = null;
                 }
             }
-        });
+        }
 
-        this.getStickmen().forEach(function(stickman) {
+        for (const stickman of this.getStickmen()) {
             stickman.tick(dt);
-        })
+        }
     }
 }
