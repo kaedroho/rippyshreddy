@@ -42,7 +42,7 @@ class Stickman {
     constructor(scene: Scene, player: Player) {
         this.scene = scene;
         this.player = player;
-        this.weapon = new MachineGun();
+        this.weapon = new MachineGun(scene, player);
     }
 
     tick(dt: number) {
@@ -173,21 +173,18 @@ class Stickman {
             onFloor = false;
         }
 
+        const neckPositionX = this.posX;
+        const neckPositionY = this.posY - neckHeight - hipHeight;
+
         // Targeting
         const target = this.player.input.lookAt;
         if (target) {
-            const duckTransition = this.duckTransition;
-            const neckHeight = 100 - 25 * duckTransition;
-            const hipHeight = 75 - 25 * duckTransition;
-
-            const positionX = this.posX;
-            const positionY = this.posY - neckHeight - hipHeight;
             const targetX = target[0];
             const targetY = target[1];
 
             // Get difference between position and target
-            const diffX = targetX - positionX;
-            const diffY = targetY - positionY;
+            const diffX = targetX - neckPositionX;
+            const diffY = targetY - neckPositionY;
 
             // Direction
             this.facingLeft = diffX < 0;
@@ -209,7 +206,7 @@ class Stickman {
 
         // Update weapon
         if (this.weapon) {
-            this.weapon.tick(dt, this.player.input.attack);
+            this.weapon.tick(dt, this.player.input.attack, [neckPositionX, neckPositionY], this.facingLeft, this.pitch);
         }
 
         // Move phase

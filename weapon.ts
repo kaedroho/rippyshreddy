@@ -1,8 +1,18 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="lib/assets.ts" />
+/// <reference path="scene.ts" />
+/// <reference path="player.ts" />
 
 class BaseWeapon {
-    tick(dt: number, isAttacking: boolean): void {};
+    protected scene: Scene;
+    protected player: Player;
+
+    constructor(scene: Scene, player: Player) {
+        this.scene = scene;
+        this.player = player;
+    }
+
+    tick(dt: number, isAttacking: boolean, position: Vector2, facingLeft: boolean, pitch: number): void {};
     draw(context: Context2D, position: Vector2, facingLeft: boolean, pitch: number): void {}
     getHandPositions(): [Vector2, Vector2] { return [null, null]; }
 }
@@ -14,15 +24,21 @@ class BaseGun extends BaseWeapon {
     protected rightHandPosition: Vector2 = [0, 0];
     private recoil: number = 0;
 
-    tick(dt: number, isAttacking: boolean) {
+    tick(dt: number, isAttacking: boolean, position: Vector2, facingLeft: boolean, pitch: number) {
         this.recoil -= dt * 200;
+
         if (this.recoil < 0) {
             if (isAttacking) {
                 this.recoil = 20;
+
+                this.shoot(position, facingLeft, pitch)
             } else {
                 this.recoil = 0;
             }
         }
+    }
+
+    shoot(position: Vector2, facingLeft: boolean, pitch: number) {
     }
 
     draw(context: Context2D, position: Vector2, facingLeft: boolean, pitch: number) {
