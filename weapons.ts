@@ -1,7 +1,7 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="lib/assets.ts" />
 /// <reference path="scene.ts" />
-/// <reference path="player.ts" />
+/// <reference path="players.ts" />
 
 class BaseWeapon {
     protected scene: Scene;

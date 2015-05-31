@@ -1,7 +1,7 @@
 /// <reference path="lib/types.ts" />
-/// <reference path="player.ts" />
+/// <reference path="players.ts" />
 /// <reference path="scene.ts" />
-/// <reference path="weapon.ts" />
+/// <reference path="weapons.ts" />
 
 
 function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number): Vector2 {

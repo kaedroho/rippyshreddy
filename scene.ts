@@ -1,6 +1,6 @@
 /// <reference path="lib/types.ts" />
-/// <reference path="player.ts" />
-/// <reference path="stickman.ts" />
+/// <reference path="players.ts" />
+/// <reference path="stickmen.ts" />
 
 class PlayerState {
     public kills: number;

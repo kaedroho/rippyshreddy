@@ -2,9 +2,9 @@
 /// <reference path="lib/assets.ts" />
 /// <reference path="camera.ts" />
 /// <reference path="map.ts" />
-/// <reference path="player.ts" />
+/// <reference path="players.ts" />
 /// <reference path="scene.ts" />
-/// <reference path="stickman.ts" />
+/// <reference path="stickmen.ts" />
 
 function constructFortMap() {
     const map = new Map(100, 100);
