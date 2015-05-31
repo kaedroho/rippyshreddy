@@ -1,3 +1,5 @@
+/// <reference path="lib/types.ts" />
+
 interface Input {
     move: number;
     jump: boolean;

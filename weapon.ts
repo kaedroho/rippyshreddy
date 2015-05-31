@@ -1,3 +1,6 @@
+/// <reference path="lib/types.ts" />
+/// <reference path="lib/assets.ts" />
+
 class BaseWeapon {
     tick(dt: number, isAttacking: boolean): void {};
     draw(context: Context2D, position: Vector2, facingLeft: boolean, pitch: number): void {}

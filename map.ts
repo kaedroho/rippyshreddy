@@ -1,3 +1,6 @@
+/// <reference path="lib/types.ts" />
+/// <reference path="lib/assets.ts" />
+
 class Map {
     private sizeX: number;
     private sizeY: number;

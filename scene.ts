@@ -1,3 +1,4 @@
+/// <reference path="lib/types.ts" />
 /// <reference path="player.ts" />
 /// <reference path="stickman.ts" />
 

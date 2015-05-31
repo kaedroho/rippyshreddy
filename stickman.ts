@@ -1,3 +1,4 @@
+/// <reference path="lib/types.ts" />
 /// <reference path="player.ts" />
 /// <reference path="scene.ts" />
 /// <reference path="weapon.ts" />

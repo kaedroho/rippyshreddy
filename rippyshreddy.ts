@@ -1,12 +1,10 @@
+/// <reference path="lib/types.ts" />
 /// <reference path="lib/assets.ts" />
 /// <reference path="camera.ts" />
 /// <reference path="map.ts" />
 /// <reference path="player.ts" />
 /// <reference path="scene.ts" />
 /// <reference path="stickman.ts" />
-
-type Context2D = CanvasRenderingContext2D;
-type Vector2 = [number, number];
 
 function constructFortMap() {
     const map = new Map(100, 100);

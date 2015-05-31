@@ -1,3 +1,5 @@
+/// <reference path="lib/types.ts" />
+
 class Camera {
     private posX: number = 0;
     private posY: number = 0;
