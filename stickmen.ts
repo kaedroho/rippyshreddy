@@ -211,7 +211,7 @@ class Stickman {
 
         // Move phase
         if (onFloor) {
-            let legSpeed = this.velX * dt / 30;
+            let legSpeed = this.velX * dt * (1 + this.duckTransition * 0.5) / 30;
             if (this.player.input.move < 0) {
                 legSpeed *= -1;
             }
