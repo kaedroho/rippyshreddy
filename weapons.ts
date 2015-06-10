@@ -71,7 +71,7 @@ class BaseGun extends BaseWeapon {
 
         // Make smoke particles
         for (let i = 0; i < 2; i++) {
-            this.scene.particles.addParticle('smoke', transformedMuzzlePosition, [100*transformedMuzzleDirection[0], 100*transformedMuzzleDirection[1]]);
+            this.scene.particles.addParticle('smoke', transformedMuzzlePosition, [100*transformedMuzzleDirection[0]+Math.random()*50, 100*transformedMuzzleDirection[1]+Math.random()*50]);
         }
 
         // Add recoil
