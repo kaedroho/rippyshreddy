@@ -22,6 +22,7 @@ class BaseGun extends BaseWeapon {
     protected imageOffset: Vector2 = [0, 0];
     protected leftHandPosition: Vector2 = [0, 0];
     protected rightHandPosition: Vector2 = [0, 0];
+    protected muzzlePosition: Vector2 = [0, 0];
     private recoil: number = 0;
 
     tick(dt: number, isAttacking: boolean, position: Vector2, facingLeft: boolean, pitch: number) {
@@ -29,8 +30,6 @@ class BaseGun extends BaseWeapon {
 
         if (this.recoil < 0) {
             if (isAttacking) {
-                this.recoil = 20;
-
                 this.shoot(position, facingLeft, pitch)
             } else {
                 this.recoil = 0;
@@ -39,6 +38,44 @@ class BaseGun extends BaseWeapon {
     }
 
     shoot(position: Vector2, facingLeft: boolean, pitch: number) {
+        // Muzzle position
+        const muzzlePosition = <Vector2>[
+            this.muzzlePosition[0] - this.recoil * 1.5,
+            40 - this.muzzlePosition[1],
+        ];
+
+        // Muzzle direction
+        const muzzleDirection = <Vector2>[
+            Math.cos(pitch),
+            Math.sin(pitch),
+        ];
+
+        // Transform muzzle position by muzzle direction
+        const transformedMuzzlePosition = <Vector2>[
+            muzzlePosition[0] * muzzleDirection[0] - muzzlePosition[1] * muzzleDirection[1],
+            muzzlePosition[0] * muzzleDirection[1] + muzzlePosition[1] * muzzleDirection[0],
+        ];
+
+        // Transform muzzle direction
+        const transformedMuzzleDirection = <Vector2>muzzleDirection.slice();
+
+        // Reverse direction if player is facing left
+        if (facingLeft) {
+            transformedMuzzleDirection[0] = -transformedMuzzleDirection[0];
+            transformedMuzzlePosition[0] = -transformedMuzzlePosition[0];
+        }
+
+        // Add player position to muzzle position
+        transformedMuzzlePosition[0] += position[0];
+        transformedMuzzlePosition[1] += position[1];
+
+        // Make smoke particles
+        for (let i = 0; i < 2; i++) {
+            this.scene.particles.addParticle('smoke', transformedMuzzlePosition, [100*transformedMuzzleDirection[0], 100*transformedMuzzleDirection[1]]);
+        }
+
+        // Add recoil
+        this.recoil += 20;
     }
 
     draw(context: Context2D, position: Vector2, facingLeft: boolean, pitch: number) {
@@ -68,4 +105,5 @@ class MachineGun extends BaseGun {
     imageOffset = <Vector2>[-30, 30];
     leftHandPosition = <Vector2>[85, 45];
     rightHandPosition = <Vector2>[40, 45];
+    muzzlePosition = <Vector2>[120, 2];
 }
