@@ -31,7 +31,7 @@ class Scene {
         this.bullets = new BulletEngine(this);
     }
 
-    private getStickmen(): Stickman[] {
+    getStickmen(): Stickman[] {
         const stickmen: Stickman[] = [];
 
         for (const [player, playerState] of this.players) {

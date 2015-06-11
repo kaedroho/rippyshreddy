@@ -384,6 +384,16 @@ class Stickman {
         context.restore();
     }
 
+    getCentroid() {
+        const neckHeight = 100 - 25 * this.duckTransition;
+        const hipHeight = 75 - 25 * this.duckTransition;
+        const height = neckHeight + hipHeight + 60;
+
+        const position = this.getPosition();
+        position[1] -= height / 2;
+        return position;
+    }
+
     getPosition(): [number, number] {
         return [this.posX, this.posY]
     }
