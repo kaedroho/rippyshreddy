@@ -2,6 +2,7 @@
 /// <reference path="players.ts" />
 /// <reference path="stickmen.ts" />
 /// <reference path="particles.ts" />
+/// <reference path="bullets.ts" />
 
 class PlayerState {
     public kills: number;
@@ -22,10 +23,12 @@ class Scene {
     public map: Map;
     private players: [Player, PlayerState][] = [];
     public particles: ParticleEngine;
+    public bullets: BulletEngine;
 
     constructor(map: Map) {
         this.map = map;
         this.particles = new ParticleEngine();
+        this.bullets = new BulletEngine(this);
     }
 
     private getStickmen(): Stickman[] {
@@ -73,6 +76,8 @@ class Scene {
     }
 
     draw(context: Context2D, at: number) {
+        this.bullets.draw(context, at);
+
         for (const stickman of this.getStickmen()) {
             stickman.draw(context, at);
         }
@@ -93,6 +98,8 @@ class Scene {
                 }
             }
         }
+
+        this.bullets.tick(dt);
 
         for (const stickman of this.getStickmen()) {
             stickman.tick(dt);
