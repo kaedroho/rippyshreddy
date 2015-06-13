@@ -44,3 +44,28 @@ class Map {
         }
     }
 }
+
+class TwoFortMap extends Map {
+    constructor() {
+        super(100, 100);
+
+        // Right fort
+        this.fillArea(35, 13, 8, 1, 1);
+        this.fillArea(35, 0, 1, 13, 1);
+        this.fillArea(35, 0, 20, 1, 1);
+        this.fillArea(55, 0, 1, 22, 1);
+        this.fillArea(35, 22, 21, 1, 1);
+        this.fillArea(50, 16, 5, 6, 1);
+
+        // Left fort
+        this.fillArea(13, 13, 8, 1, 1);
+        this.fillArea(20, 0, 1, 13, 1);
+        this.fillArea(0, 0, 20, 1, 1);
+        this.fillArea(0, 0, 1, 22, 1);
+        this.fillArea(0, 22, 21, 1, 1);
+        this.fillArea(1, 16, 5, 6, 1);
+
+        // Middle
+        this.fillArea(21, 22, 14, 1, 1);
+    }
+}

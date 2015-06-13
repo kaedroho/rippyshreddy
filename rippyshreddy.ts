@@ -1,40 +1,15 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="lib/assets.ts" />
 /// <reference path="camera.ts" />
-/// <reference path="map.ts" />
+/// <reference path="maps.ts" />
 /// <reference path="players.ts" />
 /// <reference path="scene.ts" />
 /// <reference path="stickmen.ts" />
 
-function constructFortMap() {
-    const map = new Map(100, 100);
-
-    // Right fort
-    map.fillArea(35, 13, 8, 1, 1);
-    map.fillArea(35, 0, 1, 13, 1);
-    map.fillArea(35, 0, 20, 1, 1);
-    map.fillArea(55, 0, 1, 22, 1);
-    map.fillArea(35, 22, 21, 1, 1);
-    map.fillArea(50, 16, 5, 6, 1);
-
-    // Left fort
-    map.fillArea(13, 13, 8, 1, 1);
-    map.fillArea(20, 0, 1, 13, 1);
-    map.fillArea(0, 0, 20, 1, 1);
-    map.fillArea(0, 0, 1, 22, 1);
-    map.fillArea(0, 22, 21, 1, 1);
-    map.fillArea(1, 16, 5, 6, 1);
-
-    // Middle
-    map.fillArea(21, 22, 14, 1, 1);
-
-    return map;
-}
-
 function startGame(canvas: HTMLCanvasElement): void {
     const context = <Context2D>canvas.getContext('2d');
 
-    const map = constructFortMap();
+    const map = new TwoFortMap();
     const scene = new Scene(map);
     const human = new LocalPlayer();
     const camera = new Camera(0, 0, 2000);
