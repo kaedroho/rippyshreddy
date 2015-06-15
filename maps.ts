@@ -5,10 +5,6 @@ class Map {
     private sizeX: number;
     private sizeY: number;
     private tiles: Uint8Array;
-    private static tileImages: Assets.ImageAsset[] = [
-        null, // 0 - Air
-        new Assets.ImageAsset('tiles/brick.png'), // 1 - Brick
-    ]
 
     constructor(sizeX: number, sizeY: number) {
         this.sizeX = sizeX;
@@ -38,7 +34,22 @@ class Map {
                 const value = this.getTile(i, j);
 
                 if (value) {
-                    context.drawImage(Map.tileImages[value].image, i * 64, j * 64, 64, 64);
+                    if (value == 1) {
+                        // Plain block
+                        context.fillStyle = 'rgb(128, 128, 128)';
+                        context.strokeStyle = 'rgb(64, 64, 64)';
+                    }
+
+                    // Draw box
+                    context.lineWidth = 6;
+                    context.beginPath();
+                    context.moveTo(i * 64, j * 64);
+                    context.lineTo((i + 1) * 64, j * 64);
+                    context.lineTo((i + 1) * 64, (j + 1) * 64);
+                    context.lineTo(i * 64, (j + 1) * 64);
+                    context.lineTo(i * 64, j * 64);
+                    context.stroke();
+                    context.fill();
                 }
             }
         }
@@ -67,5 +78,6 @@ class TwoFortMap extends Map {
 
         // Middle
         this.fillArea(21, 22, 14, 1, 1);
+        this.fillArea(21, 22, 7, 1, 1);
     }
 }
