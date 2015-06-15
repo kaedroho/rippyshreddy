@@ -1,6 +1,8 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="scene.ts" />
 
+module RippyShreddy {
+
 interface BulletTrail {
     type: string;
     start: Vector2;
@@ -33,7 +35,7 @@ function orderStickmenByDistanceFromPoint(stickmen: Stickman[], position: Vector
     });
 }
 
-class BulletEngine {
+export class BulletEngine {
     private scene: Scene;
     private trails: BulletTrail[] = [];
 
@@ -109,4 +111,6 @@ class BulletEngine {
         }
         context.restore();
     }
+}
+
 }

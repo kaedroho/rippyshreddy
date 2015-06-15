@@ -4,6 +4,8 @@
 /// <reference path="particles.ts" />
 /// <reference path="bullets.ts" />
 
+module RippyShreddy {
+
 class PlayerState {
     public kills: number;
     public deaths: number;
@@ -19,7 +21,7 @@ class PlayerState {
     }
 }
 
-class Scene {
+export class Scene {
     public map: Map;
     private players: [Player, PlayerState][] = [];
     public particles: ParticleEngine;
@@ -107,4 +109,6 @@ class Scene {
 
         this.particles.tick(dt);
     }
+}
+
 }

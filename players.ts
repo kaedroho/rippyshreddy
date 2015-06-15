@@ -1,5 +1,7 @@
 /// <reference path="lib/types.ts" />
 
+module RippyShreddy {
+
 interface Input {
     move: number;
     jump: boolean;
@@ -8,12 +10,12 @@ interface Input {
     attack: boolean;
 }
 
-interface Player {
+export interface Player {
     input: Input;
     getDisplayName(): string;
 }
 
-class AIPlayer implements Player {
+export class AIPlayer implements Player {
     input: Input = {
         move: 0,
         jump: false,
@@ -27,7 +29,7 @@ class AIPlayer implements Player {
     }
 }
 
-class LocalPlayer implements Player {
+export class LocalPlayer implements Player {
     input: Input = {
         move: 0,
         jump: false,
@@ -57,4 +59,6 @@ class LocalPlayer implements Player {
     getDisplayName() {
         return "Bob";
     }
+}
+
 }

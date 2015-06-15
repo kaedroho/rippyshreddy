@@ -3,6 +3,7 @@
 /// <reference path="scene.ts" />
 /// <reference path="weapons.ts" />
 
+module RippyShreddy {
 
 function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number): Vector2 {
     // Work out middle
@@ -25,7 +26,7 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
     return pos;
 };
 
-class Stickman {
+export class Stickman {
     private posX: number = 10;
     private posY: number = -100;
     private velX: number = 0;
@@ -397,4 +398,6 @@ class Stickman {
     getPosition(): [number, number] {
         return [this.posX, this.posY]
     }
+}
+
 }

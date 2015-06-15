@@ -6,6 +6,8 @@
 /// <reference path="scene.ts" />
 /// <reference path="stickmen.ts" />
 
+module RippyShreddy {
+
 function startGame(canvas: HTMLCanvasElement): void {
     const context = <Context2D>canvas.getContext('2d');
 
@@ -188,11 +190,13 @@ function startGame(canvas: HTMLCanvasElement): void {
     };
 }
 
-function RippyShreddyMain(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement) {
     Assets.loadAssets('/media/', function(totalAssets: number, assetsLoaded: number) {
         if (totalAssets == assetsLoaded) {
             // All assets loaded. Start the game!
             startGame(canvas);
         }
     });
+}
+
 }

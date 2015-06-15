@@ -1,6 +1,8 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="lib/assets.ts" />
 
+module RippyShreddy {
+
 interface ParticleType {
     image: Assets.ImageAsset;
     forces: Vector2;
@@ -14,7 +16,7 @@ interface Particle {
     life: number;
 }
 
-class ParticleEngine {
+export class ParticleEngine {
     private static particleTypes: { [key: string]: ParticleType } = {
         smoke: {
             image: new Assets.ImageAsset('particles/smoke.png'),
@@ -64,4 +66,6 @@ class ParticleEngine {
             context.drawImage(image, particle.position[0] - image.width / 2, particle.position[1] - image.height / 2);
         }
     }
+}
+
 }

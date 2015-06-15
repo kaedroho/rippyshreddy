@@ -1,7 +1,9 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="lib/assets.ts" />
 
-class Map {
+module RippyShreddy {
+
+export class Map {
     private sizeX: number;
     private sizeY: number;
     private tiles: Uint8Array;
@@ -56,7 +58,7 @@ class Map {
     }
 }
 
-class TwoFortMap extends Map {
+export class TwoFortMap extends Map {
     constructor() {
         super(100, 100);
 
@@ -80,4 +82,6 @@ class TwoFortMap extends Map {
         this.fillArea(21, 22, 14, 1, 1);
         this.fillArea(21, 22, 7, 1, 1);
     }
+}
+
 }

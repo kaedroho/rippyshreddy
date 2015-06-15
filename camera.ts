@@ -1,6 +1,8 @@
 /// <reference path="lib/types.ts" />
 
-class Camera {
+module RippyShreddy {
+
+export class Camera {
     private posX: number = 0;
     private posY: number = 0;
     private posZ: number = 0;
@@ -71,4 +73,6 @@ class Camera {
             (y - canvas.height/2) * scale + this.posY,
        ];
     }
+}
+
 }

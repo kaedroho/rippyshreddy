@@ -3,7 +3,9 @@
 /// <reference path="scene.ts" />
 /// <reference path="players.ts" />
 
-class BaseWeapon {
+module RippyShreddy {
+
+export class BaseWeapon {
     protected scene: Scene;
     protected player: Player;
 
@@ -17,7 +19,7 @@ class BaseWeapon {
     getHandPositions(): [Vector2, Vector2] { return [null, null]; }
 }
 
-class BaseGun extends BaseWeapon {
+export class BaseGun extends BaseWeapon {
     protected image: Assets.ImageAsset;
     protected imageOffset: Vector2 = [0, 0];
     protected leftHandPosition: Vector2 = [0, 0];
@@ -104,7 +106,7 @@ class BaseGun extends BaseWeapon {
     }
 }
 
-class MachineGun extends BaseGun {
+export class MachineGun extends BaseGun {
     static image = new Assets.ImageAsset('weapons/machinegun.png');
 
     image = MachineGun.image;
@@ -112,4 +114,6 @@ class MachineGun extends BaseGun {
     leftHandPosition = <Vector2>[85, 45];
     rightHandPosition = <Vector2>[40, 45];
     muzzlePosition = <Vector2>[120, 2];
+}
+
 }

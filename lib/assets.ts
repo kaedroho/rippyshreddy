@@ -1,4 +1,6 @@
-module Assets {
+module RippyShreddy {
+
+export module Assets {
     var assets = [];
     var assetLock = false;
 
@@ -50,4 +52,6 @@ module Assets {
             });
         }
     }
+}
+
 }
