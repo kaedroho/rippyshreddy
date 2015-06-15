@@ -29,6 +29,8 @@ class Map {
     }
 
     draw(context: Context2D) {
+        const time = Date.now();
+
         for (let i = 0; i < this.sizeX; i++) {
             for (let j = 0; j < this.sizeY; j++) {
                 const value = this.getTile(i, j);
@@ -38,6 +40,42 @@ class Map {
                         // Plain block
                         context.fillStyle = 'rgb(128, 128, 128)';
                         context.strokeStyle = 'rgb(64, 64, 64)';
+                    } else if (value == 2) {
+                        // Right boost
+                        const tile = Math.floor(time / 100 - i) % 20;
+                        const r = 220 - tile;
+                        const g = 84 - tile;
+                        const b = 84 - tile;
+
+                        context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                        context.strokeStyle = 'rgb(128, 16, 16)';
+                    } else if (value == 3) {
+                        // Left boost
+                        const tile = Math.floor(-time / 100 - i) % 20;
+                        const r = 200 + tile;
+                        const g = 64 + tile;
+                        const b = 64 + tile;
+
+                        context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                        context.strokeStyle = 'rgb(128, 16, 16)';
+                    } else if (value == 4) {
+                        // Down boost
+                        const tile = Math.floor(time / 100 - j) % 20;
+                        const r = 220 - tile;
+                        const g = 84 - tile;
+                        const b = 84 - tile;
+
+                        context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                        context.strokeStyle = 'rgb(128, 16, 16)';
+                    } else if (value == 5) {
+                        // Up boost
+                        const tile = Math.floor(-time / 100 - j) % 20;
+                        const r = 200 + tile;
+                        const g = 64 + tile;
+                        const b = 64 + tile;
+
+                        context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                        context.strokeStyle = 'rgb(128, 16, 16)';
                     }
 
                     // Draw box
