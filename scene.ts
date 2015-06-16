@@ -3,6 +3,7 @@
 /// <reference path="stickmen.ts" />
 /// <reference path="particles.ts" />
 /// <reference path="bullets.ts" />
+/// <reference path="maps.ts" />
 
 module RippyShreddy {
 
