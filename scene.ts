@@ -2,7 +2,7 @@
 /// <reference path="players.ts" />
 /// <reference path="stickmen.ts" />
 /// <reference path="particles.ts" />
-/// <reference path="bullets.ts" />
+/// <reference path="bullettrails.ts" />
 /// <reference path="maps.ts" />
 
 module RippyShreddy {
@@ -26,12 +26,12 @@ export class Scene {
     public map: Map;
     private players: [Player, PlayerState][] = [];
     public particles: ParticleEngine;
-    public bullets: BulletEngine;
+    public bulletTrails: BulletTrailEngine;
 
     constructor(map: Map) {
         this.map = map;
         this.particles = new ParticleEngine();
-        this.bullets = new BulletEngine(this);
+        this.bulletTrails = new BulletTrailEngine();
     }
 
     getStickmen(): Stickman[] {
@@ -79,7 +79,7 @@ export class Scene {
     }
 
     draw(context: Context2D, at: number) {
-        this.bullets.draw(context, at);
+        this.bulletTrails.draw(context, at);
 
         for (const stickman of this.getStickmen()) {
             stickman.draw(context, at);
@@ -102,7 +102,7 @@ export class Scene {
             }
         }
 
-        this.bullets.tick(dt);
+        this.bulletTrails.tick(dt);
 
         for (const stickman of this.getStickmen()) {
             stickman.tick(dt);

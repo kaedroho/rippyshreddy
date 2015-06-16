@@ -74,8 +74,14 @@ export class BaseGun extends BaseWeapon {
         // Direction in radians
         const direction = Math.atan2(transformedMuzzleDirection[0], transformedMuzzleDirection[1]);
 
-        // Shoot bullet
-        this.scene.bullets.shoot('bullet', transformedMuzzlePosition, direction);
+        // Find target
+        const target = <Vector2>[
+            transformedMuzzlePosition[0] + transformedMuzzleDirection[0] * 1000,
+            transformedMuzzlePosition[1] + transformedMuzzleDirection[1] * 1000,
+        ];
+
+        // Add trail
+        this.scene.bulletTrails.addTrail('bullet', transformedMuzzlePosition, target);
 
         // Make smoke particles
         for (let i = 0; i < 2; i++) {
