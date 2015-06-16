@@ -1,8 +1,8 @@
 /// <reference path="lib/types.ts" />
 /// <reference path="players.ts" />
 /// <reference path="stickmen.ts" />
-/// <reference path="particles.ts" />
-/// <reference path="bullettrails.ts" />
+/// <reference path="fx/particles.ts" />
+/// <reference path="fx/bullettrails.ts" />
 /// <reference path="maps.ts" />
 
 module RippyShreddy {

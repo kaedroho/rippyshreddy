@@ -1,5 +1,5 @@
-/// <reference path="lib/types.ts" />
-/// <reference path="scene.ts" />
+/// <reference path="../lib/types.ts" />
+/// <reference path="../scene.ts" />
 
 module RippyShreddy {
 
