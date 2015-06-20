@@ -3,6 +3,11 @@
 
 module RippyShreddy {
 
+interface CollisionResult {
+    position: Vector2;
+    normal: Vector2;
+}
+
 export class Map {
     private sizeX: number;
     private sizeY: number;
@@ -55,6 +60,102 @@ export class Map {
                 }
             }
         }
+    }
+
+    raycast(from: Vector2, to: Vector2): CollisionResult {
+        // http://dev.mothteeth.com/2011/11/2d-ray-casting-on-a-grid-in-as3/
+        // http://www.cse.yorku.ca/~amana/research/grid.pdf
+
+        // Scale points
+        const fromX = from[0] / 64;
+        const fromY = from[1] / 64;
+        const toX = to[0] / 64;
+        const toY = to[1] / 64;
+
+        // Work out direction
+        const directionX = toX - fromX;
+        const directionY = toY - fromY;
+
+        // Work out step
+        const stepX = (directionX < 0) ? -1 : 1;
+        const stepY = (directionY < 0) ? -1 : 1;
+
+        // Get tiles
+        let X = Math.floor(fromX);
+        let Y = Math.floor(fromY);
+        const endX = Math.floor(toX);
+        const endY = Math.floor(toY);
+
+        // Check if this starts on a tile boundary (and heading into the tile. If so, check collision on this tile
+        if (((fromX % 1 == 0 && directionX > 0) || (fromY % 1 == 0 && directionY > 0)) && this.tiles[Y * this.sizeX + X]) {
+            return {
+                position: <Vector2>from.slice(),
+                normal: <Vector2>[0, 0], // TODO
+            };
+        }
+
+        // Check that it crosses a tile
+        if (X == endX && Y == endY) {
+            return;
+        }
+
+        // Work out ratios
+        const ratioX = directionX / directionY;
+        const ratioY = directionY / directionX;
+
+        // Work out deltas
+        const deltaX = Math.abs(directionY);
+        const deltaY = Math.abs(directionX);
+
+        // Work out maxes
+        let maxX = deltaX * (( stepX > 0) ? (1 - (fromX % 1)) : (fromX % 1));
+        let maxY = deltaY * (( stepY > 0) ? (1 - (fromY % 1)) : (fromY % 1));
+
+        // Traverse
+        let limit = 1000;
+        while ((X != endX || Y != endY) && limit > 0 && X >= 0 && Y >= 0 && X < this.sizeX && Y < this.sizeY) {
+            limit--;
+            if (maxX < maxY) {
+                // Move along X axis
+                maxX += deltaX;
+                X += stepX;
+
+                // Check for collision
+               if (this.getTile(X, Y) > 0) {
+                    const collisionX = X + (stepX < 0 ? 1 : 0);
+                    const collisionY = fromY + ratioY * (collisionX - fromX);
+
+                    return {
+                        position: <Vector2>[
+                            collisionX * 64,
+                            collisionY * 64,
+                        ],
+                        normal: <Vector2>[-stepX, 0],
+                    };
+                }
+            } else {
+                // Move along Y axis
+                maxY += deltaY;
+                Y += stepY;
+
+                // Check for collision
+                if (this.getTile(X, Y) > 0) {
+                    const collisionY = Y + (stepY < 0 ? 1 : 0);
+                    const collisionX = fromX + ratioX * (collisionY - fromY);
+
+                    return {
+                        position: <Vector2>[
+                            collisionX * 64,
+                            collisionY * 64,
+                        ],
+                        normal: <Vector2>[0, -stepY],
+                    };
+                }
+            }
+        }
+
+        // No collision
+        return;
     }
 }
 
