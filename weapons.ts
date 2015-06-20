@@ -31,10 +31,10 @@ export class BaseGun extends BaseWeapon {
         this.recoil -= dt * 200;
 
         if (this.recoil < 0) {
+            this.recoil = 0;
+
             if (isAttacking) {
                 this.shoot(position, facingLeft, pitch)
-            } else {
-                this.recoil = 0;
             }
         }
     }
@@ -74,11 +74,25 @@ export class BaseGun extends BaseWeapon {
         // Direction in radians
         const direction = Math.atan2(transformedMuzzleDirection[0], transformedMuzzleDirection[1]);
 
+        // Raycast from neck to muzzle to make sure weapon isn't going through a wall
+        const muzzleInWall = this.scene.map.raycast(position, transformedMuzzlePosition);
+
+        if (muzzleInWall) {
+            return;
+        }
+
         // Find target
-        const target = <Vector2>[
+        let target = <Vector2>[
             transformedMuzzlePosition[0] + transformedMuzzleDirection[0] * 1000,
             transformedMuzzlePosition[1] + transformedMuzzleDirection[1] * 1000,
         ];
+
+        // Do raycast against map
+        const mapCollision = this.scene.map.raycast(transformedMuzzlePosition, target);
+
+        if (mapCollision) {
+            target = mapCollision.position;
+        }
 
         // Add trail
         this.scene.bulletTrails.addTrail('bullet', transformedMuzzlePosition, target);
