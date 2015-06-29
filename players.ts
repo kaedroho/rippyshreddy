@@ -11,11 +11,13 @@ interface Input {
 }
 
 export interface Player {
+    id: number;
     input: Input;
     getDisplayName(): string;
 }
 
 export class AIPlayer implements Player {
+    id = null;
     input: Input = {
         move: 0,
         jump: false,
@@ -23,6 +25,10 @@ export class AIPlayer implements Player {
         lookAt: [0, 0],
         attack: false,
     };
+
+    constructor(id: number) {
+        this.id = id;
+    }
 
     getDisplayName() {
         return "John";
@@ -30,6 +36,7 @@ export class AIPlayer implements Player {
 }
 
 export class LocalPlayer implements Player {
+    id = null;
     input: Input = {
         move: 0,
         jump: false,
@@ -37,6 +44,10 @@ export class LocalPlayer implements Player {
         lookAt: [0, 0],
         attack: false,
     };
+
+    constructor(id: number) {
+        this.id = id;
+    }
 
     setInput(input: Input) {
         if ('move' in input) {

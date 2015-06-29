@@ -7,6 +7,10 @@
 
 module RippyShreddy {
 
+interface SceneUpdatePacket {
+    players: any[],
+}
+
 class PlayerState {
     public kills: number;
     public deaths: number;
@@ -58,11 +62,31 @@ export class Scene {
         }
     }
 
+    getPlayerById(id: number): Player {
+        for (const [player, playerState] of this.players) {
+            if (id === player.id) {
+                return player;
+            }
+        }
+    }
+
+    getPlayers(): [Player, PlayerState][] {
+        return this.players;
+    }
+
     getStickman(player: Player): Stickman {
         const playerState = this.getPlayerState(player);
 
         if (playerState) {
             return playerState.stickman;
+        }
+    }
+
+    getStickmanByPlayerId(id: number): Stickman {
+        const player = this.getPlayerById(id);
+
+        if (player) {
+            return this.getStickman(player);
         }
     }
 

@@ -8,16 +8,13 @@
 
 module RippyShreddy {
 
-function startGame(canvas: HTMLCanvasElement): void {
+function startGame(canvas: HTMLCanvasElement, ws: WebSocket): void {
     const context = <Context2D>canvas.getContext('2d');
 
     const map = new TwoFortMap();
     const scene = new Scene(map);
-    const human = new LocalPlayer();
+    let human = null;
     const camera = new Camera(0, 0, 2000);
-
-    scene.addPlayer(human);
-    scene.spawnPlayer(human);
 
     let lastFrame = Date.now();
     let lastTick = Date.now();
@@ -39,10 +36,12 @@ function startGame(canvas: HTMLCanvasElement): void {
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        const stickman = scene.getStickman(human);
-        if (stickman) {
-            const position = stickman.getPosition();
-            camera.moveTo(position[0], position[1], 2400);
+        if (human) {
+            const stickman = scene.getStickman(human);
+            if (stickman) {
+                const position = stickman.getPosition();
+                camera.moveTo(position[0], position[1], 2400);
+            }
         }
 
         context.save();
@@ -81,19 +80,81 @@ function startGame(canvas: HTMLCanvasElement): void {
         if (moveRight) move++;
         if (moveLeft) move--;
 
-        human.setInput({
+        const input = {
             move: move,
             jump: jump,
             duck: duck,
             lookAt: <Vector2>camera.screenToScene(canvas, mouseX, mouseY),
             attack: attack,
-        });
+        };
+
+        if (human) {
+            human.setInput(input);
+        }
+
+        ws.send(JSON.stringify({
+            type: 'input',
+            input: input
+        }));
 
         // Update scene
         scene.tick(0.03);
     }
 
     setInterval(tick, 30);
+
+    ws.onmessage = function(message) {
+        const data = JSON.parse(message.data);
+
+        if (data.type == 'update') {
+            for (const playerData of data.players) {
+                const player = scene.getPlayerById(playerData.id);
+
+                if (player) {
+                    // Update input
+                    if (playerData.input) {
+                        player.input = playerData.input;
+                    }
+
+                    // Update stickman
+                    const stickman = scene.getStickman(player);
+                    const stickmanData = playerData.stickman;
+                    if (stickman) {
+                        stickman.setPosition(stickmanData.pos);
+                    } else {
+                        if (stickmanData) {
+                            scene.spawnPlayer(player);
+                        }
+                    }
+                }
+            }
+        } else if (data.type == 'welcome') {
+            human = new LocalPlayer(data.id);
+            scene.addPlayer(human);
+
+            console.log(data.players);
+
+            for (const playerData of data.players) {
+                const player = new LocalPlayer(playerData.id);
+                scene.addPlayer(player);
+            }
+
+        } else if (data.type == 'playerJoin') {
+            if (data.id === human.id) {
+                return;
+            }
+
+            const player = new LocalPlayer(data.id);
+            scene.addPlayer(player);
+        }
+    }
+
+    // Handle any messages that have been recieved before the handler was registered
+    if (ws['savedMessages']) {
+        for (const message of ws['savedMessages']) {
+            ws.onmessage(message);
+        }
+    }
 
     let upKey = false;
     let leftKey = false;
@@ -190,13 +251,27 @@ function startGame(canvas: HTMLCanvasElement): void {
     };
 }
 
-export function main(canvas: HTMLCanvasElement) {
-    Assets.loadAssets('/media/', function(totalAssets: number, assetsLoaded: number) {
-        if (totalAssets == assetsLoaded) {
-            // All assets loaded. Start the game!
-            startGame(canvas);
-        }
-    });
+export function main(canvas: HTMLCanvasElement, serverURL: string) {
+    const ws = new WebSocket(serverURL);
+
+    // Save messages recieved before we register actual signal handler
+    ws['savedMessages'] = [];
+    ws.onmessage = function(message) {
+        ws['savedMessages'].push(message);
+    }
+
+    ws.onopen = function() {
+        Assets.loadAssets('/media/', function(totalAssets: number, assetsLoaded: number) {
+            if (totalAssets == assetsLoaded) {
+                // All assets loaded. Start the game!
+                startGame(canvas, ws);
+            }
+        });
+
+        window.onbeforeunload = function() {
+            ws.close();
+        };
+    };
 }
 
 }

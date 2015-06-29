@@ -396,7 +396,12 @@ export class Stickman {
     }
 
     getPosition(): [number, number] {
-        return [this.posX, this.posY]
+        return [this.posX, this.posY];
+    }
+
+    setPosition(position: [number, number]) {
+        this.posX = position[0];
+        this.posY = position[1];
     }
 }
 
