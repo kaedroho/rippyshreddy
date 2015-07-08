@@ -54,6 +54,16 @@ export class Scene {
         this.players.push([player, new PlayerState()]);
     }
 
+    removePlayer(playerToRemove: Player) {
+        for (const i in this.players) {
+            const [player, playerState] = this.players[i];
+            if (player == playerToRemove) {
+                this.players.splice(i, 1);
+                return;
+            }
+        }
+    }
+
     getPlayerState(player: Player): PlayerState {
         for (const p of this.players) {
             if (p[0] === player) {

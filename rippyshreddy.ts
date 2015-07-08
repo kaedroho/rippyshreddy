@@ -146,6 +146,9 @@ function startGame(canvas: HTMLCanvasElement, ws: WebSocket): void {
 
             const player = new LocalPlayer(data.id);
             scene.addPlayer(player);
+        } else if (data.type == 'playerLeave') {
+            const player = scene.getPlayerById(data.id);
+            scene.removePlayer(player);
         }
     }
 

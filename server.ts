@@ -71,6 +71,19 @@ export function startGame(): void {
             }
         });
 
+        ws.on('close', function() {
+            scene.removePlayer(player);
+            const playerLeavePacket = JSON.stringify({
+                type: 'playerLeave',
+                id: player.id,
+            });
+            for (const client of wss.clients) {
+                if (client.readyState === ws.OPEN) {
+                    client.send(playerLeavePacket);
+                }
+            }
+        });
+
         // Send welcome packet to player
         let players = [];
         for (const [player, playerState] of scene.getPlayers()) {
