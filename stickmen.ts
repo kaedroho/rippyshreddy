@@ -222,7 +222,7 @@ export class Stickman {
         }
     }
 
-    draw(context: Context2D, at: number) {
+    buildSkeleton(at: number) {
         const duckTransition = this.duckTransition;
         const neckHeight = 100 - 35 * duckTransition;
         const hipHeight = 75 - 30 * duckTransition;
@@ -343,12 +343,30 @@ export class Stickman {
         headPosition[0] += neckPositionX;
         headPosition[1] += neckPositionY;
 
+        return {
+            leftFoot: <Vector2>[leftFootPositionX, leftFootPositionY],
+            rightFoot: <Vector2>[rightFootPositionX, rightFootPositionY],
+            leftKnee: <Vector2>[leftKneePositionX, leftKneePositionY],
+            rightKnee: <Vector2>[rightKneePositionX, rightKneePositionY],
+            hip: <Vector2>[hipPositionX, hipPositionY],
+            neck: <Vector2>[neckPositionX, neckPositionY],
+            leftElbow: leftElbowPosition,
+            rightElbow: rightElbowPosition,
+            leftHand: leftHandPosition,
+            rightHand: rightHandPosition,
+            head: headPosition,
+        }
+    }
+
+    draw(context: Context2D, at: number) {
+        const skel = this.buildSkeleton(at);
+
         context.save();
         context.translate(this.posX + this.velX * at, this.posY + this.velY * at);
 
         // Draw weapon
         if (this.weapon) {
-            this.weapon.draw(context, [neckPositionX, neckPositionY], this.facingLeft, this.pitch);
+            this.weapon.draw(context, skel.neck, this.facingLeft, this.pitch);
         }
 
         context.lineWidth = 10;
@@ -356,30 +374,30 @@ export class Stickman {
         context.lineCap = 'round';
 
         context.beginPath();
-        context.moveTo(leftFootPositionX, leftFootPositionY);
-        context.lineTo(leftKneePositionX, leftKneePositionY);
-        context.lineTo(hipPositionX, hipPositionY);
+        context.moveTo(skel.leftFoot[0], skel.leftFoot[1]);
+        context.lineTo(skel.leftKnee[0], skel.leftKnee[1]);
+        context.lineTo(skel.hip[0], skel.hip[1]);
 
-        context.moveTo(rightFootPositionX, rightFootPositionY);
-        context.lineTo(rightKneePositionX, rightKneePositionY);
-        context.lineTo(hipPositionX, hipPositionY);
+        context.moveTo(skel.rightFoot[0], skel.rightFoot[1]);
+        context.lineTo(skel.rightKnee[0], skel.rightKnee[1]);
+        context.lineTo(skel.hip[0], skel.hip[1]);
 
-        context.moveTo(leftHandPosition[0], leftHandPosition[1]);
-        context.lineTo(leftElbowPosition[0], leftElbowPosition[1]);
-        context.lineTo(neckPositionX, neckPositionY);
+        context.moveTo(skel.leftHand[0], skel.leftHand[1]);
+        context.lineTo(skel.leftElbow[0], skel.leftElbow[1]);
+        context.lineTo(skel.neck[0], skel.neck[1]);
 
-        context.moveTo(rightHandPosition[0], rightHandPosition[1]);
-        context.lineTo(rightElbowPosition[0], rightElbowPosition[1]);
-        context.lineTo(neckPositionX, neckPositionY);
+        context.moveTo(skel.rightHand[0], skel.rightHand[1]);
+        context.lineTo(skel.rightElbow[0], skel.rightElbow[1]);
+        context.lineTo(skel.neck[0], skel.neck[1]);
 
-        context.moveTo(neckPositionX, neckPositionY);
-        context.lineTo(hipPositionX, hipPositionY);
+        context.lineTo(skel.neck[0], skel.neck[1]);
+        context.lineTo(skel.hip[0], skel.hip[1]);
 
         context.stroke();
 
         // Draw head
         context.beginPath();
-        context.arc(headPosition[0], headPosition[1], 30, 0, Math.PI * 2);
+        context.arc(skel.head[0], skel.head[1], 30, 0, Math.PI * 2);
         context.fill();
 
         context.restore();
