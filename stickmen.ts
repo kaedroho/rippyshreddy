@@ -538,6 +538,9 @@ export class Stickman {
         return currentCollision;
     }
 
+    damage(part: string, amount) {
+    }
+
     getCentroid() {
         const neckHeight = 100 - 25 * this.duckTransition;
         const hipHeight = 75 - 25 * this.duckTransition;

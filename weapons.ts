@@ -102,6 +102,17 @@ export class BaseGun extends BaseWeapon {
             if (stickmanCollision) {
                 target = stickmanCollision.position;
                 hitStickman = stickman;
+
+                // TODO: This can be called multiple times for the same bullet!
+
+                // Add damage to the stickman
+                hitStickman.damage(stickmanCollision['part'], 100);
+
+                // Blood!
+                // Make blood particles
+                for (let i = 0; i < 5; i++) {
+                    this.scene.particles.addParticle('blood', stickmanCollision.position, [700*transformedMuzzleDirection[0]-Math.random()*500, 700*transformedMuzzleDirection[1]-Math.random()*500]);
+                }
             }
         }
 

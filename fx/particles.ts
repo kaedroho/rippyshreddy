@@ -22,6 +22,11 @@ export class ParticleEngine {
             image: new Assets.ImageAsset('particles/smoke.png'),
             forces: [0, -30],
             damping: 0.6,
+        },
+        blood: {
+            image: new Assets.ImageAsset('particles/blood.png'),
+            forces: [0, 1000],
+            damping: 0.1,
         }
     }
 
