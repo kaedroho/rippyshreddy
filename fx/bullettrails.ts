@@ -6,7 +6,8 @@ module RippyShreddy {
 interface BulletTrail {
     type: string;
     start: Vector2;
-    end: Vector2;
+    dir: Vector2;
+    dist: number;
     age: number;
 }
 
@@ -14,11 +15,25 @@ export class BulletTrailEngine {
     private trails: BulletTrail[] = [];
 
     addTrail(type: string, start: Vector2, end: Vector2) {
-        // Add a trail for the bullet
+        // Get direction vector
+        let dir = <Vector2>[
+            end[0] - start[0],
+            end[1] - start[1]
+        ];
+
+        // Calculate distance to target
+        const dist = Math.sqrt(dir[0] * dir[0] + dir[1] * dir[1]);
+
+        // Normalise direction vector
+        dir[0] /= dist;
+        dir[1] /= dist;
+
+        // Add trail
         this.trails.push({
             type: type,
             start: <Vector2>start.slice(),
-            end: <Vector2>end.slice(),
+            dir: dir,
+            dist: dist,
             age: 0,
         })
     }
@@ -33,18 +48,25 @@ export class BulletTrailEngine {
         context.save();
         for (const trail of this.trails) {
             if (trail.age < 0.2) {
-                const progress = 1 - trail.age * 5;
-                context.globalAlpha = progress;
-                context.beginPath();
-                context.moveTo(
-                    trail.start[0] + (trail.end[0] - trail.start[0]) * (1 - progress),
-                    trail.start[1] + (trail.end[1] - trail.start[1]) * (1 - progress)
-                );
-                context.lineTo(
-                    trail.start[0] + (trail.end[0] - trail.start[0]) * (1 - (progress - 0.3)),
-                    trail.start[1] + (trail.end[1] - trail.start[1]) * (1 - (progress - 0.3))
-                );
-                context.stroke();
+                const progress = trail.age * 5 * 1000;
+                console.log(progress);
+
+                if (progress < trail.dist) {
+                    const endProgress = Math.min(progress + 300, trail.dist)
+
+                    context.globalAlpha = 1 - progress;
+
+                    context.beginPath();
+                    context.moveTo(
+                        trail.start[0] + trail.dir[0] * progress,
+                        trail.start[1] + trail.dir[1] * progress
+                    );
+                    context.lineTo(
+                        trail.start[0] + trail.dir[0] * endProgress,
+                        trail.start[1] + trail.dir[1] * endProgress
+                    );
+                    context.stroke();
+                }
             }
         }
         context.restore();
