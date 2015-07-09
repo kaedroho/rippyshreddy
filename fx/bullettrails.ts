@@ -49,12 +49,11 @@ export class BulletTrailEngine {
         for (const trail of this.trails) {
             if (trail.age < 0.2) {
                 const progress = trail.age * 5 * 1000;
-                console.log(progress);
 
                 if (progress < trail.dist) {
                     const endProgress = Math.min(progress + 300, trail.dist)
 
-                    context.globalAlpha = 1 - progress;
+                    context.globalAlpha = 1 - progress / 1000;
 
                     context.beginPath();
                     context.moveTo(
