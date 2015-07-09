@@ -3,11 +3,6 @@
 
 module RippyShreddy {
 
-interface CollisionResult {
-    position: Vector2;
-    normal: Vector2;
-}
-
 export class Map {
     private sizeX: number;
     private sizeY: number;

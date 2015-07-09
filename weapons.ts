@@ -94,6 +94,17 @@ export class BaseGun extends BaseWeapon {
             target = mapCollision.position;
         }
 
+        // Do raycast against stickmen
+        let hitStickman = null;
+        for (const stickman of this.scene.getStickmen()) {
+            const stickmanCollision = stickman.raycast(transformedMuzzlePosition, target);
+
+            if (stickmanCollision) {
+                target = stickmanCollision.position;
+                hitStickman = stickman;
+            }
+        }
+
         // Add trail
         this.scene.bulletTrails.addTrail('bullet', transformedMuzzlePosition, target);
 

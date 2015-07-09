@@ -222,7 +222,7 @@ export class Stickman {
         }
     }
 
-    buildSkeleton(at: number) {
+    buildSkeleton(at: number = 0) {
         const duckTransition = this.duckTransition;
         const neckHeight = 100 - 35 * duckTransition;
         const hipHeight = 75 - 30 * duckTransition;
@@ -401,6 +401,141 @@ export class Stickman {
         context.fill();
 
         context.restore();
+    }
+
+    raycast(from: Vector2, to: Vector2): CollisionResult {
+        // Build a skeleton from the stickman
+        const skel = this.buildSkeleton();
+
+        // The from/to vectors are in global space but the skeleton is not
+        // convert from and to to stickman-space
+        from = [from[0] - this.posX, from[1] - this.posY];
+        to = [to[0] - this.posX, to[1] - this.posY]
+
+        // A couple of raycast helpers
+        function raycastLine(from: Vector2, to: Vector2, lineFrom: Vector2, lineTo: Vector2): CollisionResult {
+            // http://processingjs.org/learning/custom/intersect/
+
+            const x1 = lineFrom[0];
+            const y1 = lineFrom[1];
+            const x2 = lineTo[0];
+            const y2 = lineTo[1];
+            const x3 = from[0];
+            const y3 = from[1];
+            const x4 = to[0];
+            const y4 = to[1];
+
+            let a1, a2, b1, b2, c1, c2;
+            let r1, r2, r3, r4;
+            let denom, offset, num;
+            let x, y;
+
+            // Compute a1, b1, c1, where line joining points 1 and 2
+            // is "a1 x + b1 y + c1 = 0".
+            a1 = y2 - y1;
+            b1 = x1 - x2;
+            c1 = (x2 * y1) - (x1 * y2);
+
+            // Compute r3 and r4.
+            r3 = ((a1 * x3) + (b1 * y3) + c1);
+            r4 = ((a1 * x4) + (b1 * y4) + c1);
+
+            // Check signs of r3 and r4. If both point 3 and point 4 lie on
+            // same side of line 1, the line segments do not intersect.
+            if ((r3 != 0) && (r4 != 0) && ((r3 * r4) >= 0)) {
+                return;
+            }
+
+            // Compute a2, b2, c2
+            a2 = y4 - y3;
+            b2 = x3 - x4;
+            c2 = (x4 * y3) - (x3 * y4);
+
+            // Compute r1 and r2
+            r1 = (a2 * x1) + (b2 * y1) + c2;
+            r2 = (a2 * x2) + (b2 * y2) + c2;
+
+            // Check signs of r1 and r2. If both point 1 and point 2 lie
+            // on same side of second line segment, the line segments do
+            // not intersect.
+            if ((r1 != 0) && (r2 != 0) && ((r1 * r2) >= 0)) {
+                return;
+            }
+
+            // Line segments intersect: compute intersection point.
+            denom = (a1 * b2) - (a2 * b1);
+
+            if (denom == 0) {
+                return; // Co linear
+            }
+
+            if (denom < 0){
+                offset = -denom / 2;
+            } else {
+                offset = denom / 2 ;
+            }
+
+            // The denom/2 is to get rounding instead of truncating. It
+            // is added or subtracted to the numerator, depending upon the
+            // sign of the numerator.
+            num = (b1 * c2) - (b2 * c1);
+            if (num < 0) {
+                x = (num - offset) / denom;
+            } else {
+                x = (num + offset) / denom;
+            }
+
+            num = (a2 * c1) - (a1 * c2);
+            if (num < 0) {
+                y = ( num - offset) / denom;
+            } else {
+                y = (num + offset) / denom;
+            }
+
+            // Lines intersect
+            return {
+                position: [x, y],
+                normal: [0, 0],
+            }
+        }
+
+        function raycastCircle(from: Vector2, to: Vector2, circleCentre: Vector2, circleRadius: number): CollisionResult {
+            return;
+        }
+
+        // Collision handler
+        // This gets called with the result of each raycast and is responsible
+        // for changing the currentTarget and currentCollision variables when
+        // a collision occurs
+        let currentTarget = to;
+        let currentCollision: CollisionResult = null;
+        function handleCollision(collision: CollisionResult, part: string) {
+            if (collision) {
+                currentCollision = collision;
+                currentCollision['part'] = part;
+                currentTarget = collision.position;
+            }
+        }
+
+        // Run raycast against each part. Call handleCollision with the result
+        handleCollision(raycastLine(from, currentTarget, skel.leftFoot, skel.leftKnee), 'lowerLeftLeg');
+        handleCollision(raycastLine(from, currentTarget, skel.rightFoot, skel.rightKnee), 'lowerRightleg');
+        handleCollision(raycastLine(from, currentTarget, skel.leftKnee, skel.hip), 'upperLeftLeg');
+        handleCollision(raycastLine(from, currentTarget, skel.rightKnee, skel.hip), 'upperRightLeg');
+        handleCollision(raycastLine(from, currentTarget, skel.hip, skel.neck), 'body');
+        handleCollision(raycastLine(from, currentTarget, skel.neck, skel.leftElbow), 'upperLeftArm');
+        handleCollision(raycastLine(from, currentTarget, skel.neck, skel.rightElbow), 'upperRightArm');
+        handleCollision(raycastLine(from, currentTarget, skel.leftElbow, skel.leftHand), 'lowerLeftArm');
+        handleCollision(raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand), 'lowerRightArm');
+        handleCollision(raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand), 'head');
+
+        // Convert collision coordinates into global space
+        if (currentCollision) {
+            currentCollision.position[0] += this.posX;
+            currentCollision.position[1] += this.posY;
+        }
+
+        return currentCollision;
     }
 
     getCentroid() {
