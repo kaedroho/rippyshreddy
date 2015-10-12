@@ -6,144 +6,142 @@
 /// <reference path="maps.ts" />
 
 module RippyShreddy {
-
-interface SceneUpdatePacket {
-    players: any[],
-}
-
-class PlayerState {
-    public kills: number;
-    public deaths: number;
-    public respawnTimer: number
-    public stickman: Stickman;
-
-    isInGame() {
-        return this.stickman != null;
+    interface SceneUpdatePacket {
+        players: any[],
     }
 
-    getScore() {
-        return this.kills * 100;
-    }
-}
+    class PlayerState {
+        public kills: number;
+        public deaths: number;
+        public respawnTimer: number
+        public stickman: Stickman;
 
-export class Scene {
-    public map: Map;
-    private players: [Player, PlayerState][] = [];
-    public particles: ParticleEngine;
-    public bulletTrails: BulletTrailEngine;
+        isInGame() {
+            return this.stickman != null;
+        }
 
-    constructor(map: Map) {
-        this.map = map;
-        this.particles = new ParticleEngine();
-        this.bulletTrails = new BulletTrailEngine();
+        getScore() {
+            return this.kills * 100;
+        }
     }
 
-    getStickmen(): Stickman[] {
-        const stickmen: Stickman[] = [];
+    export class Scene {
+        public map: Map;
+        private players: [Player, PlayerState][] = [];
+        public particles: ParticleEngine;
+        public bulletTrails: BulletTrailEngine;
 
-        for (const [player, playerState] of this.players) {
-            if (playerState.stickman) {
-                stickmen.push(playerState.stickman);
+        constructor(map: Map) {
+            this.map = map;
+            this.particles = new ParticleEngine();
+            this.bulletTrails = new BulletTrailEngine();
+        }
+
+        getStickmen(): Stickman[] {
+            const stickmen: Stickman[] = [];
+
+            for (const [player, playerState] of this.players) {
+                if (playerState.stickman) {
+                    stickmen.push(playerState.stickman);
+                }
             }
+
+            return stickmen;
         }
 
-        return stickmen;
-    }
-
-    addPlayer(player: Player) {
-        this.players.push([player, new PlayerState()]);
-    }
-
-    removePlayer(playerToRemove: Player) {
-        for (const i in this.players) {
-            const [player, playerState] = this.players[i];
-            if (player == playerToRemove) {
-                this.players.splice(i, 1);
-                return;
-            }
-        }
-    }
-
-    getPlayerState(player: Player): PlayerState {
-        for (const p of this.players) {
-            if (p[0] === player) {
-                return p[1];
-            }
-        }
-    }
-
-    getPlayerById(id: number): Player {
-        for (const [player, playerState] of this.players) {
-            if (id === player.id) {
-                return player;
-            }
-        }
-    }
-
-    getPlayers(): [Player, PlayerState][] {
-        return this.players;
-    }
-
-    getStickman(player: Player): Stickman {
-        const playerState = this.getPlayerState(player);
-
-        if (playerState) {
-            return playerState.stickman;
-        }
-    }
-
-    getStickmanByPlayerId(id: number): Stickman {
-        const player = this.getPlayerById(id);
-
-        if (player) {
-            return this.getStickman(player);
-        }
-    }
-
-    spawnPlayer(player: Player, timer: number = 0) {
-        const playerState = this.getPlayerState(player);
-
-        if (playerState) {
-            playerState.respawnTimer = timer;
-        }
-    }
-
-    leaderBoard(): [Player, PlayerState][] {
-        return [];
-    }
-
-    draw(context: Context2D, at: number) {
-        this.bulletTrails.draw(context, at);
-
-        for (const stickman of this.getStickmen()) {
-            stickman.draw(context, at);
+        addPlayer(player: Player) {
+            this.players.push([player, new PlayerState()]);
         }
 
-        this.map.draw(context);
-
-        this.particles.draw(context, at);
-    }
-
-    tick(dt: number) {
-        for (const [player, playerState] of this.players) {
-            if (!playerState.isInGame() && playerState.respawnTimer != null) {
-                playerState.respawnTimer -= dt;
-
-                if (playerState.respawnTimer <= 0) {
-                    playerState.stickman = new Stickman(this, player);
-                    playerState.respawnTimer = null;
+        removePlayer(playerToRemove: Player) {
+            for (const i in this.players) {
+                const [player, playerState] = this.players[i];
+                if (player == playerToRemove) {
+                    this.players.splice(i, 1);
+                    return;
                 }
             }
         }
 
-        this.bulletTrails.tick(dt);
-
-        for (const stickman of this.getStickmen()) {
-            stickman.tick(dt);
+        getPlayerState(player: Player): PlayerState {
+            for (const p of this.players) {
+                if (p[0] === player) {
+                    return p[1];
+                }
+            }
         }
 
-        this.particles.tick(dt);
-    }
-}
+        getPlayerById(id: number): Player {
+            for (const [player, playerState] of this.players) {
+                if (id === player.id) {
+                    return player;
+                }
+            }
+        }
 
+        getPlayers(): [Player, PlayerState][] {
+            return this.players;
+        }
+
+        getStickman(player: Player): Stickman {
+            const playerState = this.getPlayerState(player);
+
+            if (playerState) {
+                return playerState.stickman;
+            }
+        }
+
+        getStickmanByPlayerId(id: number): Stickman {
+            const player = this.getPlayerById(id);
+
+            if (player) {
+                return this.getStickman(player);
+            }
+        }
+
+        spawnPlayer(player: Player, timer: number = 0) {
+            const playerState = this.getPlayerState(player);
+
+            if (playerState) {
+                playerState.respawnTimer = timer;
+            }
+        }
+
+        leaderBoard(): [Player, PlayerState][] {
+            return [];
+        }
+
+        draw(context: Context2D, at: number) {
+            this.bulletTrails.draw(context, at);
+
+            for (const stickman of this.getStickmen()) {
+                stickman.draw(context, at);
+            }
+
+            this.map.draw(context);
+
+            this.particles.draw(context, at);
+        }
+
+        tick(dt: number) {
+            for (const [player, playerState] of this.players) {
+                if (!playerState.isInGame() && playerState.respawnTimer != null) {
+                    playerState.respawnTimer -= dt;
+
+                    if (playerState.respawnTimer <= 0) {
+                        playerState.stickman = new Stickman(this, player);
+                        playerState.respawnTimer = null;
+                    }
+                }
+            }
+
+            this.bulletTrails.tick(dt);
+
+            for (const stickman of this.getStickmen()) {
+                stickman.tick(dt);
+            }
+
+            this.particles.tick(dt);
+        }
+    }
 }
