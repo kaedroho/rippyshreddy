@@ -94,7 +94,7 @@ module RippyShreddy {
             }
 
             // Do raycast against stickmen
-            let hitStickman = null;
+            let hitStickman: Stickman = null;
             for (const stickman of this.scene.getStickmen()) {
                 const stickmanCollision = stickman.raycast(transformedMuzzlePosition, target);
 

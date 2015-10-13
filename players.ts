@@ -16,7 +16,7 @@ module RippyShreddy {
     }
 
     export class AIPlayer implements Player {
-        id = null;
+        id: number = null;
         input: Input = {
             move: 0,
             jump: false,
@@ -35,7 +35,7 @@ module RippyShreddy {
     }
 
     export class LocalPlayer implements Player {
-        id = null;
+        id: number = null;
         input: Input = {
             move: 0,
             jump: false,

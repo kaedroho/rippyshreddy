@@ -1,6 +1,6 @@
 module RippyShreddy {
     export module Assets {
-        var assets = [];
+        var assets: Asset[] = [];
         var assetLock = false;
 
         export class Asset {

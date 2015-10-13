@@ -12,7 +12,7 @@ module RippyShreddy {
 
         const map = new TwoFortMap();
         const scene = new Scene(map);
-        let human = null;
+        let human: LocalPlayer = null;
         const camera = new Camera(0, 0, 2000);
 
         let lastFrame = Date.now();
@@ -24,8 +24,8 @@ module RippyShreddy {
         let duck = false;
         let attack = false;
 
-        let mouseX = null;
-        let mouseY = null;
+        let mouseX: number = null;
+        let mouseY: number = null;
 
         function frame() {
             const time = Date.now();
