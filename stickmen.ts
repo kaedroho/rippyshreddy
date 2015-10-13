@@ -348,6 +348,7 @@ module RippyShreddy {
                 leftKnee: <Vector2>[leftKneePositionX, leftKneePositionY],
                 rightKnee: <Vector2>[rightKneePositionX, rightKneePositionY],
                 hip: <Vector2>[hipPositionX, hipPositionY],
+                middle: <Vector2>[(hipPositionX + neckPositionX) / 2, (hipPositionY + neckPositionY) / 2],
                 neck: <Vector2>[neckPositionX, neckPositionY],
                 leftElbow: leftElbowPosition,
                 rightElbow: rightElbowPosition,
@@ -424,10 +425,10 @@ module RippyShreddy {
                 const x4 = to[0];
                 const y4 = to[1];
 
-                let a1, a2, b1, b2, c1, c2;
-                let r1, r2, r3, r4;
-                let denom, offset, num;
-                let x, y;
+                let a1: number, a2: number, b1: number, b2: number, c1: number, c2: number;
+                let r1: number, r2: number, r3: number, r4: number;
+                let denom: number, offset: number, num: number;
+                let x: number, y: number;
 
                 // Compute a1, b1, c1, where line joining points 1 and 2
                 // is "a1 x + b1 y + c1 = 0".
@@ -521,12 +522,13 @@ module RippyShreddy {
             handleCollision(raycastLine(from, currentTarget, skel.rightFoot, skel.rightKnee), 'lowerRightleg');
             handleCollision(raycastLine(from, currentTarget, skel.leftKnee, skel.hip), 'upperLeftLeg');
             handleCollision(raycastLine(from, currentTarget, skel.rightKnee, skel.hip), 'upperRightLeg');
-            handleCollision(raycastLine(from, currentTarget, skel.hip, skel.neck), 'body');
+            handleCollision(raycastLine(from, currentTarget, skel.hip, skel.middle), 'lowerBody');
+            handleCollision(raycastLine(from, currentTarget, skel.middle, skel.neck), 'upperBody');
             handleCollision(raycastLine(from, currentTarget, skel.neck, skel.leftElbow), 'upperLeftArm');
             handleCollision(raycastLine(from, currentTarget, skel.neck, skel.rightElbow), 'upperRightArm');
             handleCollision(raycastLine(from, currentTarget, skel.leftElbow, skel.leftHand), 'lowerLeftArm');
             handleCollision(raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand), 'lowerRightArm');
-            handleCollision(raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand), 'head');
+            handleCollision(raycastLine(from, currentTarget, skel.neck, skel.head), 'head');
 
             // Convert collision coordinates into global space
             if (currentCollision) {
@@ -537,7 +539,7 @@ module RippyShreddy {
             return currentCollision;
         }
 
-        damage(part: string, amount) {
+        damage(part: string, amount: number) {
         }
 
         getCentroid() {
