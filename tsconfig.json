@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "out": "rippyshreddy.js",
+        "sourceMap": true
+    },
+    "filesGlob": [
+        "**/*.ts",
+        "**/*.tsx",
+        "!node_modules/**"
+    ],
+    "files": [
+        "camera.ts",
+        "fx/bullettrails.ts",
+        "fx/particles.ts",
+        "lib/assets.ts",
+        "lib/types.ts",
+        "maps.ts",
+        "players.ts",
+        "rippyshreddy.ts",
+        "scene.ts",
+        "server.ts",
+        "stickmen.ts",
+        "typings/node/node.d.ts",
+        "typings/ws/ws.d.ts",
+        "weapons.ts"
+    ],
+    "exclude": []
+}
