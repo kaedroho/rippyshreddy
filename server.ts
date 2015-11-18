@@ -1,13 +1,12 @@
-/// <reference path='typings/node/node.d.ts' />
 /// <reference path='typings/ws/ws.d.ts' />
-/// <reference path="lib/types.ts" />
-/// <reference path="lib/assets.ts" />
-/// <reference path="maps.ts" />
-/// <reference path="players.ts" />
-/// <reference path="scene.ts" />
-/// <reference path="stickmen.ts" />
 
-const ws = require('ws');
+
+import * as ws from "ws";
+import {LocalPlayer} from "./players";
+import Scene from "./scene";
+import {TwoFortMap} from "./maps";
+
+
 const WebSocketServer = ws.Server
 
 module RippyShreddy {

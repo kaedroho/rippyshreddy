@@ -1,10 +1,10 @@
-/// <reference path="lib/types.ts" />
-/// <reference path="lib/assets.ts" />
-/// <reference path="camera.ts" />
-/// <reference path="maps.ts" />
-/// <reference path="players.ts" />
-/// <reference path="scene.ts" />
-/// <reference path="stickmen.ts" />
+import {Vector2, Context2D} from "./lib/types";
+import * as Assets from "./lib/assets";
+import Camera from "./camera";
+import {TwoFortMap} from "./maps";
+import {LocalPlayer} from "./players";
+import Scene from "./scene";
+
 
 module RippyShreddy {
     function startGame(canvas: HTMLCanvasElement, ws: WebSocket): void {

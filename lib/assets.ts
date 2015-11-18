@@ -1,55 +1,51 @@
-module RippyShreddy {
-    export module Assets {
-        var assets: Asset[] = [];
-        var assetLock = false;
+var assets: Asset[] = [];
+var assetLock = false;
 
-        export class Asset {
-            constructor() {
-                if (assetLock) {
-                    throw "Cannot load asset. Asset lock set."
-                }
-
-                assets.push(this);
-            }
-
-            load(baseURL: string, callback: () => void) { }
+export class Asset {
+    constructor() {
+        if (assetLock) {
+            throw "Cannot load asset. Asset lock set."
         }
 
-        export class ImageAsset extends Asset {
-            private src: string;
-            public image: HTMLImageElement;
+        assets.push(this);
+    }
 
-            constructor(src: string) {
-                super();
+    load(baseURL: string, callback: () => void) { }
+}
 
-                this.src = src;
-                this.image = null;
-            }
+export class ImageAsset extends Asset {
+    private src: string;
+    public image: HTMLImageElement;
 
-            load(baseURL: string, callback: () => void) {
-                this.image = new Image();
-                this.image.src = baseURL + this.src;
-                this.image.onload = callback;
-            }
-        }
+    constructor(src: string) {
+        super();
 
-        export function loadAssets(baseURL: string, updateProgress: (totalAssets: number, assetsLoaded: number) => void) {
-            if (assetLock) {
-                throw "Assets already loaded.";
-            }
+        this.src = src;
+        this.image = null;
+    }
 
-            // Set assetLock to prevent any more assets being added
-            assetLock = true;
+    load(baseURL: string, callback: () => void) {
+        this.image = new Image();
+        this.image.src = baseURL + this.src;
+        this.image.onload = callback;
+    }
+}
 
-            var assetsLoaded = 0;
+export function loadAssets(baseURL: string, updateProgress: (totalAssets: number, assetsLoaded: number) => void) {
+    if (assetLock) {
+        throw "Assets already loaded.";
+    }
 
-            for (var i = 0; i < assets.length; i++) {
-                var asset = assets[i];
-                asset.load(baseURL, function() {
-                    assetsLoaded++;
-                    updateProgress(assets.length, assetsLoaded);
-                });
-            }
-        }
+    // Set assetLock to prevent any more assets being added
+    assetLock = true;
+
+    var assetsLoaded = 0;
+
+    for (var i = 0; i < assets.length; i++) {
+        var asset = assets[i];
+        asset.load(baseURL, function() {
+            assetsLoaded++;
+            updateProgress(assets.length, assetsLoaded);
+        });
     }
 }
