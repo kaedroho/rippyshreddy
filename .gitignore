@@ -1,6 +1,3 @@
-/rippyshreddy.js
-/rippyshreddy.js.map
-/rippyshreddy-server.js
-/rippyshreddy-server.js.map
-/rippyshreddy.test.js
+/build
+/dist
 /node_modules
