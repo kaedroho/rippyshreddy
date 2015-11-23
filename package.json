@@ -4,14 +4,14 @@
   "description": "",
   "main": "rippyshreddy.js",
   "scripts": {
-    "build": "tsc rippyshreddy.ts --sourcemap --module commonjs --outDir build",
-    "build-server": "tsc server.ts --sourcemap --module commonjs --outDir build",
+    "build": "tsc rippyshreddy.ts --sourcemap --module amd --outFile rs.js",
+    "build-server": "tsc server.ts --sourcemap --module amd --outFile rs-server.js",
     "watch": "watch 'npm run build'"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^1.5.0",
+    "typescript": "^1.8.0-dev.20151123",
     "watch": "^0.16.0"
   },
   "dependencies": {
