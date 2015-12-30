@@ -4,8 +4,9 @@
   "description": "",
   "main": "rippyshreddy.js",
   "scripts": {
-    "build": "tsc rippyshreddy.ts --sourcemap --module amd --outFile rs.js",
-    "build-server": "tsc server.ts --sourcemap --module amd --outFile rs-server.js",
+    "build": "tsc rippyshreddy.ts --target es5 --sourcemap --module amd --outFile dist/rippyshreddy.js",
+    "build-server": "tsc server.ts --target es5 --sourcemap --module commonjs --outDir dist/server/",
+    "server": "node dist/server/server.js",
     "watch": "watch 'npm run build'"
   },
   "author": "",

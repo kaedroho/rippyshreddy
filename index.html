@@ -23,9 +23,13 @@
     <body>
         <canvas id="game-canvas" width="1024" height="768">
 
-        <script type="text/javascript" src="rippyshreddy.js"></script>
-        <script type="text/javascript">
-            RippyShreddy.main(document.getElementById("game-canvas"), 'ws://localhost:8080');
+        <script src="lib/require.js" data-main="dist/rippyshreddy"></script>
+        <script>
+          require(["rippyshreddy"],
+            function (RippyShreddy) {
+                RippyShreddy.main(document.getElementById("game-canvas"), 'ws://localhost:8080');
+            }
+          );
         </script>
     </body>
 </html>
