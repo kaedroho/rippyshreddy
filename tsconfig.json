@@ -26,6 +26,7 @@
         "fx/bullettrails.ts",
         "fx/particles.ts",
         "lib/assets.ts",
+        "lib/helpers.ts",
         "lib/types.ts",
         "maps.ts",
         "players.ts",

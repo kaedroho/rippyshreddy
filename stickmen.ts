@@ -1,4 +1,5 @@
 import {Vector2, Context2D, CollisionResult} from "./lib/types";
+import {stringEndsWith} from "./lib/helpers";
 import {Player} from "./players";
 import Scene from "./scene";
 import {BaseWeapon, MachineGun} from "./weapons";
@@ -25,6 +26,22 @@ function calculateJoint(p1: Vector2, p2: Vector2, length: number, invert: number
     return pos;
 };
 
+
+class StickmanPart {
+    public health: number;
+    public exists: boolean;
+
+    constructor(public initialHealth: number) {
+        this.reset();
+    }
+
+    reset() {
+        this.exists = true;
+        this.health = this.initialHealth;
+    }
+}
+
+
 export default class Stickman {
     private posX: number = 10;
     private posY: number = -100;
@@ -38,6 +55,16 @@ export default class Stickman {
     private duckTransition: number = 0;
     private pitch: number = 0;
     private facingLeft: boolean = false;
+
+    private parts: {[name: string]: StickmanPart;} = {
+        head: new StickmanPart(200),
+        upperBody: new StickmanPart(200),
+        lowerBody: new StickmanPart(200),
+        leftArm: new StickmanPart(100),
+        rightArm: new StickmanPart(100),
+        leftLeg: new StickmanPart(100),
+        rightLeg: new StickmanPart(100),
+    };
 
     constructor(scene: Scene, player: Player) {
         this.scene = scene;
@@ -374,31 +401,53 @@ export default class Stickman {
         context.lineCap = 'round';
 
         context.beginPath();
-        context.moveTo(skel.leftFoot[0], skel.leftFoot[1]);
-        context.lineTo(skel.leftKnee[0], skel.leftKnee[1]);
-        context.lineTo(skel.hip[0], skel.hip[1]);
 
-        context.moveTo(skel.rightFoot[0], skel.rightFoot[1]);
-        context.lineTo(skel.rightKnee[0], skel.rightKnee[1]);
-        context.lineTo(skel.hip[0], skel.hip[1]);
+        // Legs
+        if (this.parts['leftLeg'].exists) {
+            context.moveTo(skel.leftFoot[0], skel.leftFoot[1]);
+            context.lineTo(skel.leftKnee[0], skel.leftKnee[1]);
+            context.lineTo(skel.hip[0], skel.hip[1]);
+        }
 
-        context.moveTo(skel.leftHand[0], skel.leftHand[1]);
-        context.lineTo(skel.leftElbow[0], skel.leftElbow[1]);
-        context.lineTo(skel.neck[0], skel.neck[1]);
+        if (this.parts['rightLeg'].exists) {
+            context.moveTo(skel.rightFoot[0], skel.rightFoot[1]);
+            context.lineTo(skel.rightKnee[0], skel.rightKnee[1]);
+            context.lineTo(skel.hip[0], skel.hip[1]);
+        }
 
-        context.moveTo(skel.rightHand[0], skel.rightHand[1]);
-        context.lineTo(skel.rightElbow[0], skel.rightElbow[1]);
-        context.lineTo(skel.neck[0], skel.neck[1]);
+        // Arms
+        if (this.parts['leftArm'].exists) {
+            context.moveTo(skel.leftHand[0], skel.leftHand[1]);
+            context.lineTo(skel.leftElbow[0], skel.leftElbow[1]);
+            context.lineTo(skel.neck[0], skel.neck[1]);
+        }
 
-        context.lineTo(skel.neck[0], skel.neck[1]);
-        context.lineTo(skel.hip[0], skel.hip[1]);
+        if (this.parts['rightArm'].exists) {
+            context.moveTo(skel.rightHand[0], skel.rightHand[1]);
+            context.lineTo(skel.rightElbow[0], skel.rightElbow[1]);
+            context.lineTo(skel.neck[0], skel.neck[1]);
+        }
+
+        // Body
+        if (this.parts['upperBody'].exists && this.parts['lowerBody'].exists) {
+            context.moveTo(skel.neck[0], skel.neck[1]);
+            context.lineTo(skel.hip[0], skel.hip[1]);
+        } else if (this.parts['upperBody'].exists) {
+            context.moveTo(skel.neck[0], skel.neck[1]);
+            context.lineTo(skel.middle[0], skel.middle[1]);
+        } else if (this.parts['lowerBody'].exists) {
+            context.moveTo(skel.middle[0], skel.middle[1]);
+            context.lineTo(skel.hip[0], skel.hip[1]);
+        }
 
         context.stroke();
 
-        // Draw head
-        context.beginPath();
-        context.arc(skel.head[0], skel.head[1], 30, 0, Math.PI * 2);
-        context.fill();
+        // Head
+        if (this.parts['head'].exists) {
+            context.beginPath();
+            context.arc(skel.head[0], skel.head[1], 30, 0, Math.PI * 2);
+            context.fill();
+        }
 
         context.restore();
     }
@@ -509,26 +558,35 @@ export default class Stickman {
         // a collision occurs
         let currentTarget = to;
         let currentCollision: CollisionResult = null;
-        function handleCollision(collision: CollisionResult, part: string) {
+
+        const checkCollision = (partName: string, checker: () => CollisionResult) => {
+            // Make sure the part exists first
+            if (!this.parts[partName].exists) {
+                return;
+            }
+
+            // Check collision
+            const collision = checker();
+
             if (collision) {
                 currentCollision = collision;
-                currentCollision['part'] = part;
+                currentCollision['partName'] = partName;
                 currentTarget = collision.position;
             }
         }
 
-        // Run raycast against each part. Call handleCollision with the result
-        handleCollision(raycastLine(from, currentTarget, skel.leftFoot, skel.leftKnee), 'lowerLeftLeg');
-        handleCollision(raycastLine(from, currentTarget, skel.rightFoot, skel.rightKnee), 'lowerRightleg');
-        handleCollision(raycastLine(from, currentTarget, skel.leftKnee, skel.hip), 'upperLeftLeg');
-        handleCollision(raycastLine(from, currentTarget, skel.rightKnee, skel.hip), 'upperRightLeg');
-        handleCollision(raycastLine(from, currentTarget, skel.hip, skel.middle), 'lowerBody');
-        handleCollision(raycastLine(from, currentTarget, skel.middle, skel.neck), 'upperBody');
-        handleCollision(raycastLine(from, currentTarget, skel.neck, skel.leftElbow), 'upperLeftArm');
-        handleCollision(raycastLine(from, currentTarget, skel.neck, skel.rightElbow), 'upperRightArm');
-        handleCollision(raycastLine(from, currentTarget, skel.leftElbow, skel.leftHand), 'lowerLeftArm');
-        handleCollision(raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand), 'lowerRightArm');
-        handleCollision(raycastCircle(from, currentTarget, skel.neck, 30), 'head');
+        // Run raycast against each part.
+        checkCollision('head', () => raycastCircle(from, currentTarget, skel.neck, 30));
+        checkCollision('upperBody', () => raycastLine(from, currentTarget, skel.middle, skel.neck));
+        checkCollision('lowerBody', () => raycastLine(from, currentTarget, skel.hip, skel.middle));
+        checkCollision('leftArm', () => raycastLine(from, currentTarget, skel.neck, skel.leftElbow));
+        checkCollision('leftArm', () => raycastLine(from, currentTarget, skel.leftElbow, skel.leftHand));
+        checkCollision('rightArm', () => raycastLine(from, currentTarget, skel.neck, skel.rightElbow));
+        checkCollision('rightArm', () => raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand));
+        checkCollision('leftLeg', () => raycastLine(from, currentTarget, skel.leftFoot, skel.leftKnee));
+        checkCollision('leftLeg', () => raycastLine(from, currentTarget, skel.leftKnee, skel.hip));
+        checkCollision('rightLeg', () => raycastLine(from, currentTarget, skel.rightFoot, skel.rightKnee));
+        checkCollision('rightLeg', () => raycastLine(from, currentTarget, skel.rightKnee, skel.hip));
 
         // Convert collision coordinates into global space
         if (currentCollision) {
@@ -539,7 +597,17 @@ export default class Stickman {
         return currentCollision;
     }
 
-    damage(part: string, amount: number) {
+    damage(partName: string, amount: number) {
+        const part = this.parts[partName];
+        part.health -= amount;
+
+        if (part.health < 0) {
+            part.health = 0;
+        }
+
+        if (part.exists && part.health === 0) {
+            part.exists = false;
+        }
     }
 
     getCentroid() {
