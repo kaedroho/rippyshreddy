@@ -528,7 +528,7 @@ export default class Stickman {
         handleCollision(raycastLine(from, currentTarget, skel.neck, skel.rightElbow), 'upperRightArm');
         handleCollision(raycastLine(from, currentTarget, skel.leftElbow, skel.leftHand), 'lowerLeftArm');
         handleCollision(raycastLine(from, currentTarget, skel.rightElbow, skel.rightHand), 'lowerRightArm');
-        handleCollision(raycastLine(from, currentTarget, skel.neck, skel.head), 'head');
+        handleCollision(raycastCircle(from, currentTarget, skel.neck, 30), 'head');
 
         // Convert collision coordinates into global space
         if (currentCollision) {
