@@ -53,7 +53,7 @@ export default class ParticleEngine {
                 particle.velocity[1] += forces[1] * dt;
 
                 // Apply damping to velocity
-                function applyDamping(velocity: number, damping: number, dt: number) {
+                const applyDamping = function(velocity: number, damping: number, dt: number) {
                     const force = (-velocity *  damping) ^ 0.5;
                     return velocity + force * dt;
                 }
