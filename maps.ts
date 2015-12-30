@@ -41,15 +41,7 @@ export default class Map {
                     }
 
                     // Draw box
-                    context.lineWidth = 6;
-                    context.beginPath();
-                    context.moveTo(i * 64, j * 64);
-                    context.lineTo((i + 1) * 64, j * 64);
-                    context.lineTo((i + 1) * 64, (j + 1) * 64);
-                    context.lineTo(i * 64, (j + 1) * 64);
-                    context.lineTo(i * 64, j * 64);
-                    context.stroke();
-                    context.fill();
+                    context.fillRect(i * 64, j * 64, 65, 65);
                 }
             }
         }
