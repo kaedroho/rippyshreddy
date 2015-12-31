@@ -29,6 +29,8 @@ export default class Map {
     }
 
     draw(context: Context2D) {
+        context.save();
+
         for (let i = 0; i < this.sizeX; i++) {
             for (let j = 0; j < this.sizeY; j++) {
                 const value = this.getTile(i, j);
@@ -45,6 +47,8 @@ export default class Map {
                 }
             }
         }
+
+        context.restore();
     }
 
     raycast(from: Vector2, to: Vector2): CollisionResult {
