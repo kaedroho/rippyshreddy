@@ -1,14 +1,16 @@
 import {Vector2, Context2D} from "../lib/types";
 
+
 const MAX_LIFE = 10;
+
 
 interface LimbFragmentPart {
     draw(context: Context2D);
 }
 
+
 class LimbFragmentLine implements LimbFragmentPart {
     constructor(public from: Vector2, public to: Vector2) {
-
     }
 
     draw(context: Context2D) {
@@ -19,15 +21,15 @@ class LimbFragmentLine implements LimbFragmentPart {
     }
 }
 
+
 class LimbFragmentCircle implements LimbFragmentPart {
     constructor(public position: Vector2, public radius: number) {
-
     }
 
     draw(context: Context2D) {
-
     }
 }
+
 
 interface LimbFragment {
     parts: LimbFragmentPart[];
@@ -56,13 +58,6 @@ function drawFragment(frag: LimbFragment, context: Context2D) {
     context.restore();
 }
 
-function partFromDict(data: {type: string, params: {}}): LimbFragmentPart {
-    if (data.type == 'line') {
-        return new LimbFragmentLine(data.params['from'].slice(), data.params['to'].slice());
-    } else if (data.type == 'circle') {
-        return new LimbFragmentCircle(data.params['position'].slice(), data.params['radius']);
-    }
-}
 
 export default class LimbFragmentEngine {
     private frags: LimbFragment[] = [];
