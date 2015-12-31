@@ -628,4 +628,30 @@ export default class Stickman {
         this.posX = position[0];
         this.posY = position[1];
     }
+
+    getVelocity(): [number, number] {
+        return [this.velX, this.velY];
+    }
+
+    setVelocity(velocity: [number, number]) {
+        this.velX = velocity[0];
+        this.velY = velocity[1];
+    }
+
+    getHealth(): {[name: string]: number} {
+        let partHealth: {[name: string]: number} = {};
+
+        for (let partName in this.parts) {
+            partHealth[partName] = this.parts[partName].health;
+        }
+
+        return partHealth;
+    }
+
+    setHealth(partHealth: {[name: string]: number}) {
+        for (let partName in partHealth) {
+            this.parts[partName].health = partHealth[partName];
+            this.parts[partName].exists = partHealth[partName] !== 0;
+        }
+    }
 }

@@ -38,7 +38,9 @@ module RippyShreddy {
                 const stickman = scene.getStickman(player);
                 if (stickman) {
                     playerData.stickman = {
-                        pos: stickman.getPosition()
+                        pos: stickman.getPosition(),
+                        vel: stickman.getVelocity(),
+                        health: stickman.getHealth(),
                     }
                 }
 

@@ -119,6 +119,8 @@ function startGame(canvas: HTMLCanvasElement, ws: WebSocket): void {
                     const stickmanData = playerData.stickman;
                     if (stickman) {
                         stickman.setPosition(stickmanData.pos);
+                        stickman.setVelocity(stickmanData.vel);
+                        stickman.setHealth(stickmanData.health);
                     } else {
                         if (stickmanData) {
                             scene.spawnPlayer(player);
