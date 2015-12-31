@@ -611,31 +611,25 @@ export default class Stickman {
             // Create a limb fragment
             const skel = this.buildSkeleton();
 
-            const linePart = (from: Vector2, to: Vector2): {type: string, params: {from: Vector2, to: Vector2}} => {
+            const linePart = (from: Vector2, to: Vector2): {type: string, params: {fromX: number, fromY: number, toX: number, toY: number}} => {
                 return {
                     type: 'line',
                     params: {
-                        'from': [
-                            this.posX + from[0],
-                            this.posY + from[1],
-                        ],
-                        'to': [
-                            this.posX + to[0],
-                            this.posY + to[1],
-                        ]
+                        fromX: this.posX + from[0],
+                        fromY: this.posY + from[1],
+                        toX: this.posX + to[0],
+                        toY: this.posY + to[1],
                     }
                 };
             }
 
-            const circlePart = (position: Vector2, radius: number): {type: string, params: {position: Vector2, radius: number}} => {
+            const circlePart = (position: Vector2, radius: number): {type: string, params: {posX: number, posY: number, radius: number}} => {
                 return {
                     type: 'circle',
                     params: {
-                        'position': [
-                            this.posX + position[0],
-                            this.posY + position[1],
-                        ],
-                        'radius': radius
+                        posX: this.posX + position[0],
+                        posY: this.posY + position[1],
+                        radius: radius
                     }
                 };
             }

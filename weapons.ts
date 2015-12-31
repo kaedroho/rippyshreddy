@@ -110,7 +110,7 @@ export class BaseGun extends BaseWeapon {
                 // Blood!
                 // Make blood particles
                 for (let i = 0; i < 5; i++) {
-                    this.scene.particles.addParticle('blood', stickmanCollision.position, [700*transformedMuzzleDirection[0]-Math.random()*500, 700*transformedMuzzleDirection[1]-Math.random()*500]);
+                    this.scene.particles.addParticle('blood', stickmanCollision.position[0], stickmanCollision.position[1], 700*transformedMuzzleDirection[0]-Math.random()*500, 700*transformedMuzzleDirection[1]-Math.random()*500);
                 }
             }
         }
@@ -120,7 +120,7 @@ export class BaseGun extends BaseWeapon {
 
         // Make smoke particles
         for (let i = 0; i < 2; i++) {
-            this.scene.particles.addParticle('smoke', transformedMuzzlePosition, [100*transformedMuzzleDirection[0]+Math.random()*50, 100*transformedMuzzleDirection[1]+Math.random()*50]);
+            this.scene.particles.addParticle('smoke', transformedMuzzlePosition[0], transformedMuzzlePosition[1], 100*transformedMuzzleDirection[0]+Math.random()*50, 100*transformedMuzzleDirection[1]+Math.random()*50);
         }
 
         // Add recoil

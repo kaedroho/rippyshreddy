@@ -1,4 +1,4 @@
-import {Vector2, Context2D} from "../lib/types";
+import {Context2D} from "../lib/types";
 
 
 const MAX_LIFE = 10;
@@ -10,20 +10,20 @@ interface LimbFragmentPart {
 
 
 class LimbFragmentLine implements LimbFragmentPart {
-    constructor(public from: Vector2, public to: Vector2) {
+    constructor(public fromX: number, public fromY: number, public toX: number, public toY: number) {
     }
 
     draw(context: Context2D) {
         context.beginPath();
-        context.moveTo(this.from[0], this.from[1]);
-        context.lineTo(this.to[0], this.to[1]);
+        context.moveTo(this.fromX, this.fromY);
+        context.lineTo(this.toX, this.toY);
         context.stroke();
     }
 }
 
 
 class LimbFragmentCircle implements LimbFragmentPart {
-    constructor(public position: Vector2, public radius: number) {
+    constructor(public posX: number, public posY: number, public radius: number) {
     }
 
     draw(context: Context2D) {
@@ -33,14 +33,16 @@ class LimbFragmentCircle implements LimbFragmentPart {
 
 interface LimbFragment {
     parts: LimbFragmentPart[];
-    position: Vector2;
-    velocity: Vector2;
+    posX: number;
+    posY: number;
+    velX: number;
+    velY: number;
     life: number;
 }
 
 function drawFragment(frag: LimbFragment, context: Context2D) {
     context.save();
-    context.translate(frag.position[0], frag.position[1]);
+    context.translate(frag.posX, frag.posY);
 
     context.lineWidth = 10;
     context.lineJoin = 'round';
@@ -62,43 +64,44 @@ function drawFragment(frag: LimbFragment, context: Context2D) {
 export default class LimbFragmentEngine {
     private frags: LimbFragment[] = [];
 
-    addFragment(partData: [{type: string, params: {}}], velocity: Vector2 = [0, 0]) {
-        let position = [0, 0];
+    addFragment(partData: [{type: string, params: {}}], velX: number = 0, velY: number = 0) {
+        let posX = 0;
+        let posY = 0;
 
         let parts = partData.map(function(data): LimbFragmentPart {
             if (data.type == 'line') {
-                position[0] += (data.params['from'][0] + data.params['to'][0]) / 2;
-                position[1] += (data.params['from'][1] + data.params['to'][1]) / 2;
-                return new LimbFragmentLine(data.params['from'].slice(), data.params['to'].slice());
+                posX += (data.params['fromX'] + data.params['toX']) / 2;
+                posY += (data.params['fromY'] + data.params['toY']) / 2;
+                return new LimbFragmentLine(data.params['fromX'], data.params['fromY'], data.params['toX'], data.params['toY']);
             } else if (data.type == 'circle') {
-                position[0] += data.params['position'][0];
-                return new LimbFragmentCircle(data.params['position'].slice(), data.params['radius']);
+                posX += data.params['posX'];
+                return new LimbFragmentCircle(data.params['posX'], data.params['posY'], data.params['radius']);
             }
         })
 
         // Work out position (average of all part positions)
-        position = [
-            position[0] / parts.length,
-            position[1] / parts.length,
-        ]
+        posX /= parts.length;
+        posY /= parts.length;
 
         // Subtract position from each part position to make them relative
         for (let part of parts) {
             if (part instanceof LimbFragmentLine) {
-                part.from[0] -= position[0];
-                part.from[1] -= position[1];
-                part.to[0] -= position[0];
-                part.to[1] -= position[1];
+                part.fromX -= posX;
+                part.fromY -= posY;
+                part.toX -= posX;
+                part.toY -= posY;
             } else if (part instanceof LimbFragmentCircle) {
-                part.position[0] -= position[0];
-                part.position[1] -= position[1];
+                part.posX -= posX;
+                part.posY -= posY;
             }
         }
 
         this.frags.push({
             parts: parts,
-            position: <Vector2>position,
-            velocity: <Vector2>velocity.slice(),
+            posX: posX,
+            posY: posY,
+            velX: velX,
+            velY: velY,
             life: MAX_LIFE,
         });
     }
@@ -108,19 +111,19 @@ export default class LimbFragmentEngine {
         for (const frag of this.frags) {
             if (frag.life > 0) {
                 // Gravity
-                frag.velocity[1] += 1000 * dt;
+                frag.velY += 1000 * dt;
 
                 // Damping
                 const applyDamping = function(velocity: number, damping: number, dt: number) {
                     const force = (-velocity *  damping) ^ 0.5;
                     return velocity + force * dt;
                 }
-                frag.velocity[0] = applyDamping(frag.velocity[0], 0.1, dt);
-                frag.velocity[1] = applyDamping(frag.velocity[1], 0.1, dt);
+                frag.velX = applyDamping(frag.velX, 0.1, dt);
+                frag.velY = applyDamping(frag.velY, 0.1, dt);
 
                 // Apply velocity to position
-                frag.position[0] += frag.velocity[0] * dt;
-                frag.position[1] += frag.velocity[1] * dt;
+                frag.posX += frag.velX * dt;
+                frag.posY += frag.velY * dt;
 
                 // Update life
                 frag.life -= dt;
