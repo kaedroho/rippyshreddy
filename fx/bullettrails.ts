@@ -1,10 +1,12 @@
-import {Vector2, Context2D} from "../lib/types";
+import {Context2D} from "../lib/types";
 
 
 interface BulletTrail {
     type: string;
-    start: Vector2;
-    dir: Vector2;
+    startX: number;
+    startY: number;
+    dirX: number;
+    dirY: number;
     dist: number;
     age: number;
 }
@@ -12,25 +14,25 @@ interface BulletTrail {
 export default class BulletTrailEngine {
     private trails: BulletTrail[] = [];
 
-    addTrail(type: string, start: Vector2, end: Vector2) {
+    addTrail(type: string, startX: number, startY: number, endX: number, endY: number) {
         // Get direction vector
-        let dir = <Vector2>[
-            end[0] - start[0],
-            end[1] - start[1]
-        ];
+        let dirX = endX - startX;
+        let dirY = endY - startY;
 
         // Calculate distance to target
-        const dist = Math.sqrt(dir[0] * dir[0] + dir[1] * dir[1]);
+        const dist = Math.sqrt(dirX * dirX + dirY * dirY);
 
         // Normalise direction vector
-        dir[0] /= dist;
-        dir[1] /= dist;
+        dirX /= dist;
+        dirY /= dist;
 
         // Add trail
         this.trails.push({
             type: type,
-            start: <Vector2>start.slice(),
-            dir: dir,
+            startX: startX,
+            startY: startY,
+            dirX: dirX,
+            dirY: dirY,
             dist: dist,
             age: 0,
         })
@@ -55,12 +57,12 @@ export default class BulletTrailEngine {
 
                     context.beginPath();
                     context.moveTo(
-                        trail.start[0] + trail.dir[0] * progress,
-                        trail.start[1] + trail.dir[1] * progress
+                        trail.startX + trail.dirX * progress,
+                        trail.startY + trail.dirY * progress
                     );
                     context.lineTo(
-                        trail.start[0] + trail.dir[0] * endProgress,
-                        trail.start[1] + trail.dir[1] * endProgress
+                        trail.startX + trail.dirX * endProgress,
+                        trail.startY + trail.dirY * endProgress
                     );
                     context.stroke();
                 }

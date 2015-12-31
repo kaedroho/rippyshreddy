@@ -116,7 +116,7 @@ export class BaseGun extends BaseWeapon {
         }
 
         // Add trail
-        this.scene.bulletTrails.addTrail('bullet', transformedMuzzlePosition, target);
+        this.scene.bulletTrails.addTrail('bullet', transformedMuzzlePosition[0], transformedMuzzlePosition[1], target[0], target[1]);
 
         // Make smoke particles
         for (let i = 0; i < 2; i++) {
