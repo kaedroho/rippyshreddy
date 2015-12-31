@@ -102,7 +102,7 @@ export default class Map {
 
         // Traverse
         let limit = 1000;
-        while ((X != endX || Y != endY) && limit > 0 && X >= 0 && Y >= 0 && X < this.sizeX && Y < this.sizeY) {
+        while ((X != endX || Y != endY) && limit > 0) {
             limit--;
             if (maxX < maxY) {
                 // Move along X axis
