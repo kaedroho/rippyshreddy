@@ -24,6 +24,7 @@
     "files": [
         "camera.ts",
         "fx/bullettrails.ts",
+        "fx/limbfrags.ts",
         "fx/particles.ts",
         "lib/assets.ts",
         "lib/helpers.ts",

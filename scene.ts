@@ -3,6 +3,7 @@ import {Player} from "./players";
 import Stickman from "./stickmen";
 import ParticleEngine from "./fx/particles";
 import BulletTrailEngine from "./fx/bullettrails";
+import LimbFragmentEngine from "./fx/limbfrags";
 import Map from "./maps";
 
 
@@ -30,11 +31,13 @@ export default class Scene {
     private players: [Player, PlayerState][] = [];
     public particles: ParticleEngine;
     public bulletTrails: BulletTrailEngine;
+    public limbFrags: LimbFragmentEngine;
 
     constructor(map: Map) {
         this.map = map;
         this.particles = new ParticleEngine();
         this.bulletTrails = new BulletTrailEngine();
+        this.limbFrags = new LimbFragmentEngine();
     }
 
     getStickmen(): Stickman[] {
@@ -120,6 +123,7 @@ export default class Scene {
 
         this.map.draw(context);
 
+        this.limbFrags.draw(context, at);
         this.particles.draw(context, at);
     }
 
@@ -141,6 +145,7 @@ export default class Scene {
             stickman.tick(dt);
         }
 
+        this.limbFrags.tick(dt);
         this.particles.tick(dt);
     }
 }

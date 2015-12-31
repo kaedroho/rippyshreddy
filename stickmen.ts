@@ -607,6 +607,72 @@ export default class Stickman {
 
         if (part.exists && part.health === 0) {
             part.exists = false;
+
+            // Create a limb fragment
+            const skel = this.buildSkeleton();
+
+            const linePart = (from: Vector2, to: Vector2): {type: string, params: {from: Vector2, to: Vector2}} => {
+                return {
+                    type: 'line',
+                    params: {
+                        'from': [
+                            this.posX + from[0],
+                            this.posY + from[1],
+                        ],
+                        'to': [
+                            this.posX + to[0],
+                            this.posY + to[1],
+                        ]
+                    }
+                };
+            }
+
+            const circlePart = (position: Vector2, radius: number): {type: string, params: {position: Vector2, radius: number}} => {
+                return {
+                    type: 'circle',
+                    params: {
+                        'position': [
+                            this.posX + position[0],
+                            this.posY + position[1],
+                        ],
+                        'radius': radius
+                    }
+                };
+            }
+
+            if (partName === 'head') {
+                this.scene.limbFrags.addFragment([
+                    circlePart(skel.head, 30),
+                ]);
+            } else if (partName === 'upperBody') {
+                this.scene.limbFrags.addFragment([
+                    linePart(skel.neck, skel.middle),
+                ]);
+            } else if (partName === 'lowerBody') {
+                this.scene.limbFrags.addFragment([
+                    linePart(skel.middle, skel.hip),
+                ]);
+            } else if (partName === 'leftLeg') {
+                this.scene.limbFrags.addFragment([
+                    linePart(skel.hip, skel.leftKnee),
+                    linePart(skel.leftKnee, skel.leftFoot),
+                ]);
+            } else if (partName === 'rightLeg') {
+                this.scene.limbFrags.addFragment([
+                    linePart(skel.hip, skel.rightKnee),
+                    linePart(skel.rightKnee, skel.rightFoot),
+                ]);
+            } else if (partName === 'leftArm') {
+                this.scene.limbFrags.addFragment([
+                    linePart(skel.neck, skel.leftElbow),
+                    linePart(skel.leftElbow, skel.leftHand),
+                ]);
+            } else if (partName === 'rightArm') {
+                this.scene.limbFrags.addFragment([
+                    linePart(skel.neck, skel.rightElbow),
+                    linePart(skel.rightElbow, skel.rightHand),
+                ]);
+            }
         }
     }
 
