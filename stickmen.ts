@@ -201,7 +201,7 @@ export default class Stickman {
         }
 
         const neckPositionX = this.posX;
-        const neckPositionY = this.posY - neckHeight - hipHeight;
+        const neckPositionY = this.posY - this.getHeights().neck;
 
         // Targeting
         const target = this.player.input.lookAt;
@@ -248,17 +248,36 @@ export default class Stickman {
         }
     }
 
-    buildSkeleton(at: number = 0) {
+    getHeights(): {base: number, hip: number, neck: number} {
         const duckTransition = this.duckTransition;
         const neckHeight = 100 - 35 * duckTransition;
         const hipHeight = 75 - 30 * duckTransition;
+        let baseHeight = 0;
+
+        if (!this.parts['lowerBody'].exists) {
+            // No legs or lower body
+            baseHeight = -(hipHeight + neckHeight / 2);
+        } else if (!this.parts['leftLeg'].exists && !this.parts['rightLeg'].exists) {
+            // No legs
+            baseHeight = -hipHeight;
+        }
+
+        return {
+            base: baseHeight,
+            hip: baseHeight + hipHeight,
+            neck: baseHeight + hipHeight + neckHeight,
+        };
+    }
+
+    buildSkeleton(at: number = 0) {
+        const heights = this.getHeights();
         const legHeight = 40;
 
         const hipPositionX = 0;
-        const hipPositionY = -hipHeight;
+        const hipPositionY = -heights.hip;
 
         const neckPositionX = hipPositionX;
-        const neckPositionY = hipPositionY - neckHeight;
+        const neckPositionY = -heights.neck;
 
         // TODO: Add recoil to neck position
 
@@ -606,7 +625,17 @@ export default class Stickman {
         }
 
         if (part.exists && part.health === 0) {
+            // Record base height
+            const oldBaseHeight = this.getHeights().base;
+
+            // Remove part
             part.exists = false;
+
+            // Adjust position if the base height has changed
+            // If the legs are blown off, the players origin moves the hip
+            // from the feet. When this happens, we need to lift the player
+            // off the ground so they fall into the new position.
+            this.posY += this.getHeights().base - oldBaseHeight;
 
             // Create a limb fragment
             const skel = this.buildSkeleton();
