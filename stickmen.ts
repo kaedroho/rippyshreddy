@@ -633,18 +633,6 @@ export default class Stickman {
         }
 
         if (part.exists && part.health === 0) {
-            // Record base height
-            const oldBaseHeight = this.getHeights().base;
-
-            // Remove part
-            part.exists = false;
-
-            // Adjust position if the base height has changed
-            // If the legs are blown off, the players origin moves the hip
-            // from the feet. When this happens, we need to lift the player
-            // off the ground so they fall into the new position.
-            this.posY += this.getHeights().base - oldBaseHeight;
-
             // Create a limb fragment
             const skel = this.buildSkeleton();
 
@@ -704,6 +692,19 @@ export default class Stickman {
                     linePart(skel.rightElbow, skel.rightHand),
                 ]);
             }
+
+            // Record base height
+            const oldBaseHeight = this.getHeights().base;
+
+            // Remove part
+            part.exists = false;
+
+            // Adjust position if the base height has changed
+            // If the legs are blown off, the players origin moves the hip
+            // from the feet. When this happens, we need to lift the player
+            // off the ground so they fall into the new position.
+            this.posY += this.getHeights().base - oldBaseHeight;
+
         }
     }
 
