@@ -93,8 +93,18 @@ export default class Stickman {
             this.duckTransition = 1;
         }
 
-        // Velocity
-        this.velX = this.player.input.move / (1 + this.duckTransition) * 450;
+        // Left-right movement
+        if (this.parts['leftLeg'].exists && this.parts['rightLeg'].exists) {
+            // Two legs, run
+            this.velX = this.player.input.move / (1 + this.duckTransition) * 450;
+        } else if (this.parts['leftLeg'].exists || this.parts['rightLeg'].exists) {
+            // One leg, walk
+            this.velX = this.player.input.move / (1 + this.duckTransition) * 225;
+        } else {
+            this.velX = 0;
+        }
+
+        // Gravity
         this.velY += dt * 2000;
 
         // Limit velocity to 2000 units/second
@@ -193,7 +203,7 @@ export default class Stickman {
             }
         }
 
-        if (onFloor && this.player.input.jump) {
+        if (onFloor && this.player.input.jump && this.parts['leftLeg'].exists && this.parts['rightLeg'].exists) {
             this.velY -= 1400;
             onFloor = false;
         }
