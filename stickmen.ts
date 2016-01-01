@@ -113,9 +113,7 @@ export default class Stickman {
             }
         }
 
-        const neckHeight = 100 - 25 * this.duckTransition;
-        const hipHeight = 75 - 25 * this.duckTransition;
-        const height = neckHeight + hipHeight + 60;
+        const height = this.getHeights().neck + 60;
 
         // X position
         const oldPosX = this.posX;
