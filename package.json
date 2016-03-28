@@ -1,19 +1,14 @@
 {
   "name": "rippyshreddy",
   "version": "1.0.0",
-  "description": "",
-  "main": "rippyshreddy.js",
-  "scripts": {
-    "build": "tsc rippyshreddy.ts --target es5 --sourcemap --module amd --outFile dist/rippyshreddy.js",
-    "build-server": "tsc server.ts --target es5 --sourcemap --module commonjs --outDir dist/server/",
-    "server": "node dist/server/server.js",
-    "watch": "watch 'npm run build'"
-  },
-  "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^1.8.0-dev.20151123",
-    "watch": "^0.16.0"
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-rollup": "^1.8.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3",
+    "rollup-plugin-typescript": "^0.6.0"
   },
   "dependencies": {
     "ws": "^0.7.2"
