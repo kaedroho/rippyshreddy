@@ -22,22 +22,22 @@
         "!node_modules/**"
     ],
     "files": [
-        "camera.ts",
-        "fx/bullettrails.ts",
-        "fx/limbfrags.ts",
-        "fx/particles.ts",
-        "lib/assets.ts",
-        "lib/helpers.ts",
-        "lib/types.ts",
-        "maps.ts",
-        "players.ts",
-        "rippyshreddy.ts",
-        "scene.ts",
-        "server.ts",
-        "stickmen.ts",
-        "typings/node/node.d.ts",
-        "typings/ws/ws.d.ts",
-        "weapons.ts"
+        "src/camera.ts",
+        "src/fx/bullettrails.ts",
+        "src/fx/limbfrags.ts",
+        "src/fx/particles.ts",
+        "src/lib/assets.ts",
+        "src/lib/helpers.ts",
+        "src/lib/types.ts",
+        "src/maps.ts",
+        "src/players.ts",
+        "src/rippyshreddy.ts",
+        "src/scene.ts",
+        "src/server.ts",
+        "src/stickmen.ts",
+        "src/typings/node/node.d.ts",
+        "src/typings/ws/ws.d.ts",
+        "src/weapons.ts"
     ],
     "exclude": []
 }

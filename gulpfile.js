@@ -7,7 +7,7 @@ var rename = require('gulp-rename');
 
 
 gulp.task('client', function() {
-    return gulp.src('rippyshreddy.ts')
+    return gulp.src('src/rippyshreddy.ts')
         .pipe(sourcemaps.init())
         .pipe(rollup({
             format: 'iife',
@@ -22,7 +22,7 @@ gulp.task('client', function() {
 });
 
 gulp.task('server', function() {
-    return gulp.src('server.ts')
+    return gulp.src('src/server.ts')
         .pipe(sourcemaps.init())
         .pipe(rollup({
             format: 'cjs',
