@@ -40,27 +40,6 @@ interface LimbFragment {
     life: number;
 }
 
-function drawFragment(frag: LimbFragment, context: Context2D) {
-    context.save();
-    context.translate(frag.posX, frag.posY);
-
-    context.lineWidth = 10;
-    context.lineJoin = 'round';
-    context.lineCap = 'round';
-
-    // Fading
-    if (frag.life < (MAX_LIFE / 2)) {
-        context.globalAlpha = frag.life / (MAX_LIFE / 2);
-    }
-
-    for (const part of frag.parts) {
-        part.draw(context);
-    }
-
-    context.restore();
-}
-
-
 export default class LimbFragmentEngine {
     private frags: LimbFragment[] = [];
 
@@ -142,4 +121,25 @@ export default class LimbFragmentEngine {
 
         context.restore();
     }
+}
+
+
+function drawFragment(frag: LimbFragment, context: Context2D) {
+    context.save();
+    context.translate(frag.posX, frag.posY);
+
+    context.lineWidth = 10;
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+
+    // Fading
+    if (frag.life < (MAX_LIFE / 2)) {
+        context.globalAlpha = frag.life / (MAX_LIFE / 2);
+    }
+
+    for (const part of frag.parts) {
+        part.draw(context);
+    }
+
+    context.restore();
 }
