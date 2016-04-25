@@ -1,4 +1,4 @@
-/// <reference path='typings/ws/ws.d.ts' />
+/// <reference path="../typings/main.d.ts" />
 
 
 import * as ws from "ws";
@@ -7,7 +7,7 @@ import Scene from "./scene";
 import {TwoFortMap} from "./maps";
 
 
-const WebSocketServer = ws.Server
+const WebSocketServer = ws.Server;
 
 module RippyShreddy {
     export function startGame(): void {

@@ -35,9 +35,14 @@
         "src/scene.ts",
         "src/server.ts",
         "src/stickmen.ts",
-        "src/typings/node/node.d.ts",
-        "src/typings/ws/ws.d.ts",
-        "src/weapons.ts"
+        "src/weapons.ts",
+        "typings/browser.d.ts",
+        "typings/browser/ambient/ws/index.d.ts",
+        "typings/main.d.ts",
+        "typings/main/ambient/ws/index.d.ts"
     ],
-    "exclude": []
+    "exclude": [],
+    "atom": {
+        "rewriteTsconfig": true
+    }
 }
