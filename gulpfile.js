@@ -1,37 +1,37 @@
 var gulp = require('gulp');
-var sourcemaps = require('gulp-sourcemaps');
-var rollup = require('gulp-rollup');
+var rollup = require('rollup-stream');
 var typescript = require('rollup-plugin-typescript');
 var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
+var source = require('vinyl-source-stream');
+var streamify = require('gulp-streamify')
 
 
 gulp.task('client', function() {
-    return gulp.src('src/rippyshreddy.ts')
-        .pipe(sourcemaps.init())
-        .pipe(rollup({
+    return rollup({
+            entry: 'src/rippyshreddy.ts',
             format: 'iife',
             moduleName: 'RippyShreddy',
             plugins: [
-                typescript()
+                typescript({
+                    typescript: require('typescript')
+                }),
             ]
-        }))
-        .pipe((rename('rippyshreddy.js')))
-        .pipe(sourcemaps.write('.'))
+        })
+        .pipe(source('rippyshreddy.js'))
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('server', function() {
-    return gulp.src('src/server.ts')
-        .pipe(sourcemaps.init())
-        .pipe(rollup({
+    return rollup({
+            entry: 'src/server.ts',
             format: 'cjs',
             plugins: [
-                typescript()
+                typescript({
+                    typescript: require('typescript')
+                }),
             ]
-        }))
-        .pipe((rename('rippyshreddy-server.js')))
-        .pipe(sourcemaps.write('.'))
+        })
+        .pipe(source('rippyshreddy-server.js'))
         .pipe(gulp.dest('dist'));
 });
 
@@ -41,7 +41,7 @@ gulp.task('default', ['client', 'server']);
 gulp.task('client-dist', ['client'], function() {
     return gulp.src('dist/rippyshreddy.js')
         .pipe(uglify())
-        .pipe((rename('rippyshreddy.min.js')))
+        .pipe(rename('rippyshreddy.min.js'))
         .pipe(gulp.dest('dist'));
 });
 

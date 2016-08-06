@@ -1,5 +1,0 @@
-{
-  "ambientDependencies": {
-    "ws": "registry:dt/ws#0.0.0+20160317120654"
-  }
-}
