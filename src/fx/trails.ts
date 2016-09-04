@@ -1,7 +1,7 @@
 import {Context2D} from "../lib/types";
 
 
-interface BulletTrail {
+interface Trail {
     type: string;
     startX: number;
     startY: number;
@@ -11,8 +11,8 @@ interface BulletTrail {
     age: number;
 }
 
-export default class BulletTrailEngine {
-    private trails: BulletTrail[] = [];
+export default class TrailEngine {
+    private trails: Trail[] = [];
 
     addTrail(type: string, startX: number, startY: number, endX: number, endY: number) {
         // Get direction vector

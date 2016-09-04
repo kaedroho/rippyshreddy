@@ -23,7 +23,7 @@
     ],
     "files": [
         "src/camera.ts",
-        "src/fx/bullettrails.ts",
+        "src/fx/trails.ts",
         "src/fx/limbfrags.ts",
         "src/fx/particles.ts",
         "src/lib/assets.ts",
