@@ -8,6 +8,7 @@ interface ParticleType {
     forceY: number;
     damping: number;
     maxLife: number;
+    lifeScale: number;  // How much the particle grows during its lifetime
 }
 
 interface Particle {
@@ -26,7 +27,8 @@ export default class ParticleEngine {
             forceX: 0,
             forceY: -30,
             damping: 0.6,
-            maxLife: 5,
+            maxLife: 1,
+            lifeScale: 2,
         },
         blood: {
             image: new Assets.ImageAsset('particles/blood.png'),
@@ -34,6 +36,7 @@ export default class ParticleEngine {
             forceY: 1000,
             damping: 0.1,
             maxLife: 5,
+            lifeScale: 1,
         }
     }
 
@@ -80,18 +83,22 @@ export default class ParticleEngine {
     }
 
     draw(context: Context2D, at: number) {
-        context.save();
-
-        // Draw particles
         for (const particle of this.particles) {
             if (particle.life > 0) {
-                context.globalAlpha = particle.life / ParticleEngine.particleTypes[particle.type].maxLife;
+                const particleType = ParticleEngine.particleTypes[particle.type];
 
-                const image = ParticleEngine.particleTypes[particle.type].image.image;
-                context.drawImage(image, particle.posX - image.width / 2, particle.posY - image.height / 2);
+                context.save();
+
+                const life = particle.life / particleType.maxLife;
+                context.globalAlpha = life * 0.5;
+
+                const image = particleType.image.image;
+                context.translate(particle.posX, particle.posY)
+                context.scale(1.0 + (1 - life) * particleType.lifeScale, 1.0 + (1 - life) * particleType.lifeScale)
+                context.drawImage(image, -image.width / 2, -image.height / 2);
+
+                context.restore()
             }
         }
-
-        context.restore();
     }
 }
