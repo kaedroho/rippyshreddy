@@ -53,13 +53,13 @@ export default class TrailEngine {
         for (const trail of this.trails) {
             switch (trail.type) {
                 case TrailType.Bullet:
-                    if (trail.age < 0.2) {
-                        const progress = trail.age * 5 * 1000;
+                    if (trail.age < 0.1) {
+                        const progress = trail.age * 10000;
 
                         if (progress < trail.dist) {
-                            const endProgress = Math.min(progress + 300, trail.dist)
+                            const endProgress = Math.min(progress + 500, trail.dist)
 
-                            context.globalAlpha = 1 - progress / 1000;
+                            context.globalAlpha = 0.5 * (1 - progress / 1000);
 
                             context.beginPath();
                             context.moveTo(
