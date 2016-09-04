@@ -107,7 +107,7 @@ export class BaseGun extends BaseWeapon {
                 // TODO: This can be called multiple times for the same bullet!
 
                 // Add damage to the stickman
-                hitStickman.damage(stickmanCollision['partName'], 10);
+                hitStickman.damage(stickmanCollision['partName'], 50);
 
                 // Blood!
                 // Make blood particles
