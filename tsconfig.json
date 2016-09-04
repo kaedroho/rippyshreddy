@@ -35,11 +35,7 @@
         "src/scene.ts",
         "src/server.ts",
         "src/stickmen.ts",
-        "src/weapons.ts",
-        "typings/browser.d.ts",
-        "typings/browser/ambient/ws/index.d.ts",
-        "typings/main.d.ts",
-        "typings/main/ambient/ws/index.d.ts"
+        "src/weapons.ts"
     ],
     "exclude": [],
     "atom": {

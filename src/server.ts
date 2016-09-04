@@ -1,6 +1,3 @@
-/// <reference path="../typings/main.d.ts" />
-
-
 import * as ws from "ws";
 import {LocalPlayer} from "./players";
 import Scene from "./scene";
