@@ -1,8 +1,10 @@
 import {Vector2, Context2D} from "./lib/types";
 import * as Assets from "./lib/assets";
+import {TrailType} from "./fx/trails";
 import Scene from "./scene";
 import {Player} from "./players";
 import Stickman from "./stickmen";
+
 
 export class BaseWeapon {
     protected scene: Scene;
@@ -116,7 +118,7 @@ export class BaseGun extends BaseWeapon {
         }
 
         // Add trail
-        this.scene.trails.addTrail('bullet', transformedMuzzlePosition[0], transformedMuzzlePosition[1], target[0], target[1]);
+        this.scene.trails.addTrail(TrailType.Bullet, transformedMuzzlePosition[0], transformedMuzzlePosition[1], target[0], target[1]);
 
         // Make smoke particles
         for (let i = 0; i < 2; i++) {

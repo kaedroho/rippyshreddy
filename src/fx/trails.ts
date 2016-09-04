@@ -1,8 +1,12 @@
 import {Context2D} from "../lib/types";
 
 
+export enum TrailType {
+    Bullet,
+}
+
 interface Trail {
-    type: string;
+    type: TrailType;
     startX: number;
     startY: number;
     dirX: number;
@@ -14,7 +18,7 @@ interface Trail {
 export default class TrailEngine {
     private trails: Trail[] = [];
 
-    addTrail(type: string, startX: number, startY: number, endX: number, endY: number) {
+    addTrail(type: TrailType, startX: number, startY: number, endX: number, endY: number) {
         // Get direction vector
         let dirX = endX - startX;
         let dirY = endY - startY;
@@ -47,25 +51,28 @@ export default class TrailEngine {
     draw(context: Context2D, at: number) {
         context.save();
         for (const trail of this.trails) {
-            if (trail.age < 0.2) {
-                const progress = trail.age * 5 * 1000;
+            switch (trail.type) {
+                case TrailType.Bullet:
+                    if (trail.age < 0.2) {
+                        const progress = trail.age * 5 * 1000;
 
-                if (progress < trail.dist) {
-                    const endProgress = Math.min(progress + 300, trail.dist)
+                        if (progress < trail.dist) {
+                            const endProgress = Math.min(progress + 300, trail.dist)
 
-                    context.globalAlpha = 1 - progress / 1000;
+                            context.globalAlpha = 1 - progress / 1000;
 
-                    context.beginPath();
-                    context.moveTo(
-                        trail.startX + trail.dirX * progress,
-                        trail.startY + trail.dirY * progress
-                    );
-                    context.lineTo(
-                        trail.startX + trail.dirX * endProgress,
-                        trail.startY + trail.dirY * endProgress
-                    );
-                    context.stroke();
-                }
+                            context.beginPath();
+                            context.moveTo(
+                                trail.startX + trail.dirX * progress,
+                                trail.startY + trail.dirY * progress
+                            );
+                            context.lineTo(
+                                trail.startX + trail.dirX * endProgress,
+                                trail.startY + trail.dirY * endProgress
+                            );
+                            context.stroke();
+                        }
+                    }
             }
         }
         context.restore();
