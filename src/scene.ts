@@ -30,13 +30,13 @@ export default class Scene {
     public map: Map;
     private players: [Player, PlayerState][] = [];
     public particles: ParticleEngine;
-    public Trails: TrailEngine;
+    public trails: TrailEngine;
     public limbFrags: LimbFragmentEngine;
 
     constructor(map: Map) {
         this.map = map;
         this.particles = new ParticleEngine();
-        this.Trails = new TrailEngine();
+        this.trails = new TrailEngine();
         this.limbFrags = new LimbFragmentEngine();
     }
 
@@ -115,7 +115,7 @@ export default class Scene {
     }
 
     draw(context: Context2D, at: number) {
-        this.Trails.draw(context, at);
+        this.trails.draw(context, at);
 
         for (const stickman of this.getStickmen()) {
             stickman.draw(context, at);
@@ -139,7 +139,7 @@ export default class Scene {
             }
         }
 
-        this.Trails.tick(dt);
+        this.trails.tick(dt);
 
         for (const stickman of this.getStickmen()) {
             stickman.tick(dt);
