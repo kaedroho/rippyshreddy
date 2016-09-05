@@ -1,7 +1,7 @@
 build:
   image: node:6.5.0
   commands:
-    - npm install -g gulp-cli
-    - npm install
+    - npm install -q -g gulp-cli
+    - npm install -q
     - gulp client
     - gulp server
